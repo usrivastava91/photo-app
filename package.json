@@ -9,17 +9,29 @@
     "@types/jest": "^24.0.25",
     "@types/node": "^12.12.24",
     "@types/react": "^16.9.17",
+    "@types/react-bootstrap": "^0.32.19",
     "@types/react-dom": "^16.9.4",
+    "@types/react-redux": "^7.1.1",
+    "@types/react-router-dom": "^4.3.4",
+    "@types/redux": "^3.6.0",
+    "@types/redux-saga": "^0.10.5",
+    "firebase": "^7.6.2",
     "react": "^16.12.0",
+    "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.12.0",
+    "react-redux": "^7.1.0",
+    "react-router-dom": "^5.0.1",
     "react-scripts": "3.3.0",
+    "redux": "^4.0.4",
+    "redux-saga": "^1.0.5",
     "typescript": "^3.7.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "deploy": "firebase deploy"
   },
   "eslintConfig": {
     "extends": "react-app"
