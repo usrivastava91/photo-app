@@ -12,24 +12,20 @@ interface ImageDisplayGridProps extends storeProps{}
 const _ImageDisplayGrid: React.FC<ImageDisplayGridProps> = (props: ImageDisplayGridProps)=> {
 
     const { Images = [] } = props
-    // console.log(images)
-const handleCLick = () => {
-    console.log(Images)
-}
+
     return(
-    //   <ul>
-    //       {Images.map(image => {
-    //           return <li> {image.url} </li>
-    //       })}
-    //   </ul>
+      <ul>
+          {Images.map(image => {
+              return <li> {image.url} </li>
+          })}
+      </ul>
       
-    <div><button onClick={handleCLick}>click </button></div>
     )
 }
 
 const mapStateToProps = (state: ImagesStore) => {
     return {
-        Images: state.Images
+        Images: state.setImageInfo
     }
 }
 export const ImageDisplayGrid = connect(
