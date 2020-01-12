@@ -5,25 +5,49 @@ import { connect } from "react-redux";
 import {ImagesStore} from "../store/images/store";
 import ImageInfo  from "../domain/ImageInfo";
 import { storage, fire } from "../fire";
-
+import {Container,Row,Col,Image} from "react-bootstrap";
 interface storeProps { 
     Images: ImageInfo[];
 }
 interface ImageDisplayGridProps extends storeProps{}
-const _ImageDisplayGrid: React.FC<ImageDisplayGridProps> = (props: ImageDisplayGridProps)=> {
-    const { Images = [] } = props
-    
-    return(
-      <ul>
-          {Images.map(image => {
-              return <li><img src={image.url} alt=""/></li>
-          })}
-      </ul>
-    // <div>asf</div>
-      
-    )
-}
+class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps>{
+    constructor(props: ImageDisplayGridProps) {
+        super(props);
+    }
+    componentDidMount() {
+        const db = fire.firestore();
+        db.collection("Images").get()
+        .then((querySnapshot) => {
+            querySnapshot.forEach( doc => {
+                let data = doc.data()
+                const url = data.url;
+                const imageName = data.imageName;
+                const payload = {url, imageName}
+                console.log(payload)
+                setImageInfo(payload);
+            })
+        })
+    }
+   
+    render() {
+        const { Images = []} = this.props;
+        return( 
+            <Container>
+                <Row>
+                    {Images.forEach(image => {
+                        return  (<Col xs={6} md={4}>
+                                    <Image src={image.url} rounded />
+                                </Col>)
+                    })}
+                    <Col xs={6} md={4}>
+                    
+                    </Col>
+                </Row>
+            </Container>
+        )
+    }
 
+}
 const mapStateToProps = (state: ImagesStore) => {
     return {
         Images: state.setImageInfo
