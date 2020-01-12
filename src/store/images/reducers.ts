@@ -12,7 +12,7 @@ export const ImageReducer = {
                 return [...state,
                   { 
                     url: action.payload.url,
-                    fileName:action.payload.fileName
+                    imageName:action.payload.imageName
                   }
                 ]
           }

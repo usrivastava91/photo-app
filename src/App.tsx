@@ -1,13 +1,23 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import { IRoute } from "./routes/Route";
+import { Routes } from "./routes/Routes";
 
 const App: React.FC = () => {
+  const appRoutes: IRoute[] = [...Routes];
+
   return (
-    <div className="App">
-      redux setup shitß
-    </div>
+    <Switch>
+      {appRoutes.map((route: IRoute, index: Number) => (
+        <Route
+          key={route.path}
+          exact={true}
+          path={route.path}
+          component={route.component}
+        />
+      ))}
+    </Switch>
   );
 }
 
-export default App;
+export default App
