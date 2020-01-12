@@ -2,7 +2,7 @@
 import ImageInfo from "./ImageInfo";
 
 interface setImageInfoTypes {
-    type: String;
+    type: string;
     payload: ImageInfo;
 }
 export type ImageActionsTypes = setImageInfoTypes;

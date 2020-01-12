@@ -3,7 +3,7 @@ import ImageInfo from "../domain/ImageInfo"
 import {setImageInfo} from "../store/images/actions"
 import { connect } from "react-redux";
 import {ImagesStore} from "../store/images/store";
-import { storage } from "../fire";
+import { storage , fire } from "../fire";
 import { useHistory } from "react-router-dom";
 
 interface actionProps {
@@ -22,6 +22,11 @@ const _ImageUploader:React.FC<ImageUploaderProps> = (props:ImageUploaderProps)=>
         // console.log(images)
     }
     const uploadImages = () => {
+        const db = fire.firestore();
+        db.settings({
+            timestampsInSnapshots: true
+          });
+        const ImagesRef = db.collection('Images')
         images.forEach((image: any) => {
             const imageName = image.name;
             const uploadTask = storage.ref(`images/${imageName}`).put(image);
@@ -43,12 +48,13 @@ const _ImageUploader:React.FC<ImageUploaderProps> = (props:ImageUploaderProps)=>
                         url => {
                             const payload = { url, imageName }
                             setImageInfo(payload);
+                            ImagesRef.add(payload);
                         }
                     )
                 }
             )
         })
-
+       
     }
     const routeToDisplay = () => {
         
