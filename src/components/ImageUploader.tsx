@@ -26,7 +26,7 @@ const _ImageUploader:React.FC<ImageUploaderProps> = (props:ImageUploaderProps)=>
         db.settings({
             timestampsInSnapshots: true
           });
-        const ImagesRef = db.collection('Images')
+        const dbImagesRef = db.collection('Images')
         images.forEach((image: any) => {
             const imageName = image.name;
             const uploadTask = storage.ref(`images/${imageName}`).put(image);
@@ -48,7 +48,7 @@ const _ImageUploader:React.FC<ImageUploaderProps> = (props:ImageUploaderProps)=>
                         url => {
                             const payload = { url, imageName }
                             setImageInfo(payload);
-                            ImagesRef.add(payload);
+                            dbImagesRef.add(payload);
                         }
                     )
                 }

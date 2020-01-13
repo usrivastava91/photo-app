@@ -9,11 +9,20 @@ import {Container,Row,Col,Image} from "react-bootstrap";
 interface storeProps { 
     Images: ImageInfo[];
 }
-interface ImageDisplayGridProps extends storeProps{}
+
+interface actionProps {
+    setImageInfo: typeof setImageInfo
+}
+
+interface ImageDisplayGridProps extends actionProps{}
 class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps>{
+
     constructor(props: ImageDisplayGridProps) {
         super(props);
     }
+
+    Images:ImageInfo[] = [];
+
     componentDidMount() {
         const db = fire.firestore();
         db.collection("Images").get()
@@ -23,27 +32,36 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps>{
                 const url = data.url;
                 const imageName = data.imageName;
                 const payload = {url, imageName}
-                console.log(payload)
-                setImageInfo(payload);
+                // console.log(payload);
+                // const { Images = [], setImageInfo} = this.props;
+                // setImageInfo(payload);
+                this.Images.push(payload)
             })
         })
     }
    
     render() {
-        const { Images = []} = this.props;
+        // const { Images = []} = this.props;
+        console.log("Imagessssss working",this.Images)
         return( 
-            <Container>
-                <Row>
-                    {Images.forEach(image => {
-                        return  (<Col xs={6} md={4}>
-                                    <Image src={image.url} rounded />
-                                </Col>)
-                    })}
-                    <Col xs={6} md={4}>
+            <ul>
+                {this.Images.forEach((image) => {
+                    return <li>{image.imageName}</li>
+                })}
+                <li></li>
+            </ul>
+            // <Container>
+            //     <Row>
+            //         {Images.forEach(image => {
+            //             return  (<Col xs={6} md={4}>
+            //                         <Image src={image.url} rounded />
+            //                     </Col>)
+            //         })}
+            //         <Col xs={6} md={4}>
                     
-                    </Col>
-                </Row>
-            </Container>
+            //         </Col>
+            //     </Row>
+            // </Container>
         )
     }
 
