@@ -18,6 +18,6 @@ const App: React.FC = () => {
       ))}
     </Switch>
   );
-}
+};
 
-export default App
+export default App;

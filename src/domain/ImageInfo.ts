@@ -1,4 +1,4 @@
 export default interface ImageInfo {
-    url: string;
-    imageName: string;
+  url: string;
+  imageName: string;
 }

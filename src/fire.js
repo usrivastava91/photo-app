@@ -1,4 +1,4 @@
-import firebase from 'firebase'
+import firebase from "firebase";
 var config = {
   apiKey: "AIzaSyAh2byLZOSwjzfJJRhrFvKVkx5rj9QFoGs",
   authDomain: "photo-app-typito.firebaseapp.com",
