@@ -6,6 +6,8 @@ import { ImagesStore } from "../store/images/store";
 import ImageInfo from "../domain/ImageInfo";
 import { storage, fire } from "../fire";
 import { Container, Row, Col, Image } from "react-bootstrap";
+import create_UUID from "../utils/uuid";
+
 interface storeProps {
   Images: ImageInfo[];
 }
@@ -35,7 +37,8 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
           let data = doc.data();
           const url = data.url;
           const imageName = data.imageName;
-          const payload = { url, imageName };
+          const id = create_UUID();
+          const payload = { id, url, imageName };
           const { setImageInfo } = this.props;
           setImageInfo(payload);
         });
@@ -65,7 +68,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       //   </Container>
       <ol>
         {Images.map((image, index) => {
-          <li key={index}>{image.url}</li>;
+          return <li key={index}>{image.url}</li>;
         })}
       </ol>
     );

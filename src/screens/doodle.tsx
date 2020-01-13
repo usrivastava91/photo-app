@@ -1,0 +1,114 @@
+import React from "react";
+import PropTypes from "prop-types";
+import axios from "axios";
+import InfiniteScroll from "react-infinite-scroller";
+const styles = (theme: { spacing: { unit: number } }) => ({
+  root: {
+    textAlign: "center",
+    paddingTop: theme.spacing.unit * 20
+  }
+});
+
+class Doodle extends React.Component {
+  state = {
+    allposts: [],
+    posts: [],
+    hasMore: true,
+    curpage: 0,
+    pagesize: 30,
+    totalPage: 0,
+    total: 0
+  };
+
+  componentDidMount() {
+    axios
+      .get("https://jsonplaceholder.typicode.com/posts") //100 images
+      .then((res: { data: string | any[] }) => {
+        let curpage = this.state.curpage;
+        let posts = res.data.slice(
+          curpage * this.state.pagesize, // current page * 30 Images = 0
+          (curpage + 1) * this.state.pagesize // current page+1 * 30 Images ( i.e: the next page ) = 30
+        );
+        this.setState({
+          allposts: res.data,
+          posts: posts,
+          total: res.data.length,
+          totalPage: Math.ceil(res.data.length / this.state.pagesize)
+        });
+      });
+  }
+
+  loadmoreItem = () => {
+    if (this.state.curpage + 1 < this.state.totalPage) {
+      let curpage =
+        this.state.curpage < this.state.totalPage
+          ? this.state.curpage + 1
+          : this.state.curpage;
+      let posts = this.state.allposts.slice(
+        0,
+        (curpage + 1) * this.state.pagesize
+      );
+      this.setState({ posts: posts, curpage });
+    } else {
+      this.setState({ hasMore: false });
+    }
+  };
+
+  render() {
+    if (this.state.posts.length === 0) return <h1>loading...</h1>;
+    else {
+      console.log(this.state);
+      return (
+        <div>
+          <Table
+            hasMore={this.state.hasMore}
+            posts={this.state.posts}
+            loadmoreItem={this.loadmoreItem}
+          />
+        </div>
+      );
+    }
+  }
+}
+
+export default Doodle;
+
+const Table = (props: any) => {
+  console.log("props: ", props);
+  return (
+    <React.Fragment>
+      <div style={{ height: "400px", overflow: "auto" }}>
+        <InfiniteScroll
+          pageStart={0}
+          loadMore={props.loadmoreItem}
+          hasMore={props.hasMore}
+          loader={
+            <div className="loader" key={0}>
+              Loading ...
+            </div>
+          }
+          useWindow={false}
+          threshold={350}
+        >
+          <table>
+            <tr>
+              <th>id</th>
+              <th>title</th>
+              <th>body</th>
+            </tr>
+            {props.posts.map((item: any) => {
+              return (
+                <tr>
+                  <td>{item.id}</td>
+                  <td>{item.title}</td>
+                  <td>{item.body}</td>
+                </tr>
+              );
+            })}
+          </table>
+        </InfiniteScroll>
+      </div>
+      <button onClick={props.loadmoreItem}>next</button>
+    </React.Fragment>
+  );
+};

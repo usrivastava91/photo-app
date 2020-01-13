@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
 import { storage, fire } from "../fire";
 import { useHistory } from "react-router-dom";
-
+import create_UUID from "../utils/uuid";
 interface ImageUploaderProps {}
 
 const _ImageUploader: React.FC<ImageUploaderProps> = (
@@ -39,13 +39,13 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
         },
         () => {
           //complete function
-
+          const id = create_UUID();
           storage
             .ref("images")
             .child(image.name)
             .getDownloadURL()
             .then(url => {
-              const payload = { url, imageName };
+              const payload = { id, url, imageName };
               dbImagesRef.add(payload);
             });
         }

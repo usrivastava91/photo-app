@@ -1,7 +1,7 @@
 //domain imports
 import { ImageActionsTypes } from "../../domain/Actions";
 import ImageInfo from "../../domain/ImageInfo";
-
+import create_UUID from "../../utils/uuid";
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
 
 export const ImageReducer = {
@@ -11,6 +11,7 @@ export const ImageReducer = {
   ): ImageInfo[] {
     switch (action.type) {
       case SET_IMAGE_INFO: {
+        const id = create_UUID();
         if (
           state.find(image => {
             return image.url === action.payload.url;
@@ -19,6 +20,7 @@ export const ImageReducer = {
           return [
             ...state,
             {
+              id: id,
               url: action.payload.url,
               imageName: action.payload.imageName
             }

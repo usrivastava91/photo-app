@@ -2,10 +2,10 @@ import { IRoute } from "./Route";
 import { Test } from "../screens/Test";
 import { ImageUploader } from "../components/ImageUploader";
 import { ImageDisplayGrid } from "../components/ImageDisplayGrid";
-
+import Doodle from "../screens/doodle";
 const testRoute: IRoute = {
   path: "/",
-  component: Test
+  component: Doodle
 };
 
 const imageUploaderRoute: IRoute = {
