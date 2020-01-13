@@ -22,7 +22,8 @@ export const ImageReducer = {
             {
               id: id,
               url: action.payload.url,
-              imageName: action.payload.imageName
+              imageName: action.payload.imageName,
+              timeStamp: action.payload.timeStamp
             }
           ];
       }

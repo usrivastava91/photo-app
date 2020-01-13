@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroller";
+import { Container, Row, Col, Image } from "react-bootstrap";
 const styles = (theme: { spacing: { unit: number } }) => ({
   root: {
     textAlign: "center",
@@ -88,7 +89,7 @@ const Table = (props: any) => {
             </div>
           }
           useWindow={false}
-          threshold={350}
+          threshold={550}
         >
           <table>
             <tr>
@@ -106,6 +107,38 @@ const Table = (props: any) => {
               );
             })}
           </table>
+
+          {/* <Container>
+            <Row>
+              <Col xs={6} md={4}>
+                <Image src="holder.js/171x180" rounded />
+              </Col>
+              <Col xs={6} md={4}>
+                <Image src="holder.js/171x180" roundedCircle />
+              </Col>
+              <Col xs={6} md={4}>
+                <Image src="holder.js/171x180" thumbnail />
+              </Col>
+            </Row>
+          </Container> */}
+          {/* <Container>
+          <Row>
+            {Images.map((image, index) => {
+              return (
+                <Col className="m-3" key={index} xs={6} md={4}>
+                  <Image
+                    key={index}
+                    src={image.url}
+                    width="193"
+                    height="130"
+                    rounded
+                  />
+                </Col>
+              );
+            })}
+            <Col xs={6} md={4}></Col>
+          </Row>
+        </Container> */}
         </InfiniteScroll>
       </div>
       <button onClick={props.loadmoreItem}>next</button>

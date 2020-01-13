@@ -5,7 +5,7 @@ import { ImageDisplayGrid } from "../components/ImageDisplayGrid";
 import Doodle from "../screens/doodle";
 const testRoute: IRoute = {
   path: "/",
-  component: Doodle
+  component: Test
 };
 
 const imageUploaderRoute: IRoute = {
