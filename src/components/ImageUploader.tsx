@@ -1,6 +1,4 @@
 import React from "react";
-import ImageInfo from "../domain/ImageInfo";
-import { setImageInfo } from "../store/images/actions";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
 import { storage, fire } from "../fire";
@@ -261,6 +259,4 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
 const mapStateToProps = (state: ImagesStore) => {
   return {};
 };
-export const ImageUploader = connect(mapStateToProps, { setImageInfo })(
-  _ImageUploader
-);
+export const ImageUploader = connect(mapStateToProps, {})(_ImageUploader);

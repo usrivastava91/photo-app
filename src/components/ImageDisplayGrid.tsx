@@ -1,9 +1,10 @@
 import React from "react";
-import { setImageInfo } from "../store/images/actions";
+import { setImageInfo, setThumbnailInfo } from "../store/images/actions";
 import { ImageUploader } from "../components/ImageUploader";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
 import ImageInfo from "../domain/ImageInfo";
+import ThumbnailInfo from "../domain/ThumbnailInfo";
 import { storage, fire } from "../fire";
 import { Container, Row, Col, Image } from "react-bootstrap";
 import create_UUID from "../utils/uuid";
@@ -11,10 +12,12 @@ import Axios from "axios";
 
 interface storeProps {
   Images: ImageInfo[];
+  Thumbnails: ThumbnailInfo[];
 }
 
 interface actionProps {
   setImageInfo: typeof setImageInfo;
+  setThumbnailInfo: typeof setThumbnailInfo;
 }
 
 interface ImageDisplayGridProps extends storeProps, actionProps {}
@@ -25,12 +28,13 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   }
 
   componentDidMount() {
-    this.fetchImagesUrlsFromDB();
+    this.fetchThumbnailsInfofromDB();
   }
 
-  //WHAT: Fetches the URL of all the Images from the firestore db.
+  //WHAT: Fetches the URL, name, timestamp of all the Images from the firestore db.
   //WHY: We need the URLs to fetch and display the images.
-  async fetchImagesUrlsFromDB() {
+  async fetchThumbnailsInfofromDB() {
+    debugger;
     const db = fire.firestore();
     await db
       .collection("Images")
@@ -38,13 +42,16 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       .then(querySnapshot => {
         querySnapshot.forEach(doc => {
           let data = doc.data();
-          const url = data.url;
-          const imageName = data.imageName;
-          const timeStamp = data.timeStamp;
-          const id = create_UUID();
-          const payload = { id, url, imageName, timeStamp };
-          const { setImageInfo } = this.props;
-          setImageInfo(payload);
+          if (data.thumbnailName) {
+            const url = data.url;
+            const thumbnailName = data.thumbnailName;
+            const timeStamp = data.timeStamp;
+            const id = create_UUID();
+            const payload = { id, url, thumbnailName, timeStamp };
+            const { setThumbnailInfo } = this.props;
+            debugger;
+            setThumbnailInfo(payload);
+          }
         });
       });
     // Axios.get("https://fakeimg.pl/1600x1200/?text=air&font=lobster")
@@ -54,11 +61,11 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   }
 
   render() {
-    const { Images = [] } = this.props;
+    const { Thumbnails = [] } = this.props;
     return (
       <ol>
-        {Images.map((image, index) => {
-          return <li key={index}>{image.url}</li>;
+        {Thumbnails.map((thumbnail, index) => {
+          return <li key={index}>{thumbnail.url}</li>;
         })}
       </ol>
     );
@@ -66,9 +73,9 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
 }
 const mapStateToProps = (state: ImagesStore) => {
   return {
-    Images: state.setImageInfo
+    Thumbnails: state.setThumbnailInfo
   };
 };
-export const ImageDisplayGrid = connect(mapStateToProps, { setImageInfo })(
+export const ImageDisplayGrid = connect(mapStateToProps, { setThumbnailInfo })(
   _ImageDisplayGrid
 );

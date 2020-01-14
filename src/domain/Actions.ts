@@ -1,8 +1,15 @@
 //misc imports
 import ImageInfo from "./ImageInfo";
+import setThumbnailInfo from "./ThumbnailInfo";
 
-interface setImageInfoTypes {
+export interface setImageInfoTypes {
   type: string;
   payload: ImageInfo;
 }
-export type ImageActionsTypes = setImageInfoTypes;
+
+export interface setThumbnailInfoTypes {
+  type: string;
+  payload: setThumbnailInfo;
+}
+
+// export type ImageActionsTypes = setImageInfoTypes | setThumbnailInfoTypes;
