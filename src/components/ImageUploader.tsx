@@ -11,151 +11,160 @@ interface ImageUploaderProps {}
 const _ImageUploader: React.FC<ImageUploaderProps> = (
   props: ImageUploaderProps
 ) => {
-  // const randomWords = [
-  //   "actual",
-  //   "actually",
-  //   "add",
-  //   "addition",
-  //   "additional",
-  //   "adjective",
-  //   "adult",
-  //   "adventure",
-  //   "advice",
-  //   "affect",
-  //   "afraid",
-  //   "after",
-  //   "afternoon",
-  //   "again",
-  //   "against",
-  //   "age",
-  //   "ago",
-  //   "agree",
-  //   "ahead",
-  //   "aid",
-  //   "air",
-  //   "airplane",
-  //   "alike",
-  //   "alive",
-  //   "all",
-  //   "allow",
-  //   "almost",
-  //   "alone",
-  //   "along",
-  //   "aloud",
-  //   "alphabet",
-  //   "already",
-  //   "also",
-  //   "although",
-  //   "am",
-  //   "among",
-  //   "amount",
-  //   "ancient",
-  //   "angle",
-  //   "angry",
-  //   "animal",
-  //   "announced",
-  //   "another",
-  //   "answer",
-  //   "ants",
-  //   "any",
-  //   "anybody",
-  //   "anyone",
-  //   "anything",
-  //   "anyway",
-  //   "anywhere",
-  //   "apart",
-  //   "apartment",
-  //   "appearance",
-  //   "apple",
-  //   "applied",
-  //   "appropriate",
-  //   "are",
-  //   "area",
-  //   "arm",
-  //   "army",
-  //   "around",
-  //   "arrange",
-  //   "arrangement",
-  //   "arrive",
-  //   "arrow",
-  //   "art",
-  //   "article",
-  //   "as",
-  //   "aside",
-  //   "ask",
-  //   "asleep",
-  //   "at",
-  //   "ate",
-  //   "atmosphere",
-  //   "atom",
-  //   "atomic",
-  //   "attached",
-  //   "attack",
-  //   "attempt",
-  //   "attention",
-  //   "audience",
-  //   "author",
-  //   "automobile",
-  //   "available",
-  //   "average",
-  //   "avoid",
-  //   "aware",
-  //   "away",
-  //   "baby",
-  //   "back",
-  //   "bad",
-  //   "badly",
-  //   "bag",
-  //   "balance",
-  //   "ball",
-  //   "balloon",
-  //   "band",
-  //   "bank",
-  //   "bar",
-  //   "bare"
-  // ];
+  const randomWords = [
+    "actual",
+    "actually",
+    "add",
+    "addition",
+    "additional",
+    "adjective",
+    "adult",
+    "adventure",
+    "advice",
+    "affect",
+    "afraid",
+    "after",
+    "afternoon",
+    "again",
+    "against",
+    "age",
+    "ago",
+    "agree",
+    "ahead",
+    "aid",
+    "air",
+    "airplane",
+    "alike",
+    "alive",
+    "all",
+    "allow",
+    "almost",
+    "alone",
+    "along",
+    "aloud",
+    "alphabet",
+    "already",
+    "also",
+    "although",
+    "am",
+    "among",
+    "amount",
+    "ancient",
+    "angle",
+    "angry",
+    "animal",
+    "announced",
+    "another",
+    "answer",
+    "ants",
+    "any",
+    "anybody",
+    "anyone",
+    "anything",
+    "anyway",
+    "anywhere",
+    "apart",
+    "apartment",
+    "appearance",
+    "apple",
+    "applied",
+    "appropriate",
+    "are",
+    "area",
+    "arm",
+    "army",
+    "around",
+    "arrange",
+    "arrangement",
+    "arrive",
+    "arrow",
+    "art",
+    "article",
+    "as",
+    "aside",
+    "ask",
+    "asleep",
+    "at",
+    "ate",
+    "atmosphere",
+    "atom",
+    "atomic",
+    "attached",
+    "attack",
+    "attempt",
+    "attention",
+    "audience",
+    "author",
+    "automobile",
+    "available",
+    "average",
+    "avoid",
+    "aware",
+    "away",
+    "baby",
+    "back",
+    "bad",
+    "badly",
+    "bag",
+    "balance",
+    "ball",
+    "balloon",
+    "band",
+    "bank",
+    "bar",
+    "bare"
+  ];
 
   let images: File[] = [];
   const history = useHistory();
   const handleOnChange = (e: any) => {
     [...images] = [...e.target.files];
-    debugger;
-    resizeThumbnail(200);
   };
 
-  const resizeThumbnail = (max: number) => {
-    let data;
-    debugger;
-    if (images) {
-      var reader = new FileReader();
-      reader.onload = function(event) {
-        var img = new Image();
-        img.onload = function() {
-          if (img.width > max) {
-            var oc = document.createElement("canvas"),
-              octx = oc.getContext("2d")!;
-            oc.width = img.width;
-            oc.height = img.height;
-            octx.drawImage(img, 0, 0);
-            if (img.width > img.height) {
-              oc.height = (img.height / img.width) * max;
-              oc.width = max;
-            } else {
-              oc.width = (img.width / img.height) * max;
-              oc.height = max;
-            }
-            octx.drawImage(oc, 0, 0, oc.width, oc.height);
-            octx.drawImage(img, 0, 0, oc.width, oc.height);
-            data = oc.toDataURL();
-            debugger;
-          }
-        };
-        // img.src = event.target.result;
-      };
-      reader.readAsDataURL(images[0]);
-    }
+  //WHAT: Pre-prossesing the image to resize it to a smaller size, and upload it along with the original image.
+  //WHY: At the page load, To prevent long loading time,  we will only download the small images and show them as thumbnails in the display grid.
+  //HOW:
+  const uploadThumbnail = async () => {
+    images.forEach(image => {
+      const imgDataUrl = resizeImageToThumbnail(image);
+    });
   };
+
+  const resizeImageToThumbnail = (image: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      let tempImg = new Image();
+      tempImg.src = reader.result as string;
+      tempImg.onload = function() {
+        var MAX_WIDTH = 400;
+        var MAX_HEIGHT = 300;
+        var tempW = tempImg.width;
+        var tempH = tempImg.height;
+        if (tempW > tempH) {
+          if (tempW > MAX_WIDTH) {
+            tempH *= MAX_WIDTH / tempW;
+            tempW = MAX_WIDTH;
+          }
+        } else {
+          if (tempH > MAX_HEIGHT) {
+            tempW *= MAX_HEIGHT / tempH;
+            tempH = MAX_HEIGHT;
+          }
+        }
+        var canvas = document.createElement("canvas");
+        canvas.width = tempW;
+        canvas.height = tempH;
+        var ctx = canvas.getContext("2d")!;
+        ctx.drawImage(tempImg, 0, 0, tempW, tempH);
+        var dataURL = canvas.toDataURL("image/jpeg");
+        return dataURL;
+      };
+    };
+    reader.readAsDataURL(image);
+  };
+
   const uploadImages = () => {
+    uploadThumbnail();
     const db = fire.firestore();
     db.settings({
       timestampsInSnapshots: true
