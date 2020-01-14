@@ -126,7 +126,7 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
   //HOW:
   const uploadThumbnail = async () => {
     images.forEach(image => {
-      const imgDataUrl = resizeImageToThumbnail(image);
+      resizeImageToThumbnail(image);
     });
   };
 
@@ -136,8 +136,8 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
       let tempImg = new Image();
       tempImg.src = reader.result as string;
       tempImg.onload = function() {
-        var MAX_WIDTH = 400;
-        var MAX_HEIGHT = 300;
+        var MAX_WIDTH = 200;
+        var MAX_HEIGHT = 200;
         var tempW = tempImg.width;
         var tempH = tempImg.height;
         if (tempW > tempH) {
@@ -157,7 +157,43 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
         var ctx = canvas.getContext("2d")!;
         ctx.drawImage(tempImg, 0, 0, tempW, tempH);
         var dataURL = canvas.toDataURL("image/jpeg");
-        return dataURL;
+
+        //UPLOADING THUMBNAIL
+        const db = fire.firestore();
+        db.settings({
+          timestampsInSnapshots: true
+        });
+        const dbImagesRef = db.collection("Images");
+        const thumbnailName = `thumbnail_${image.name}`;
+        const uploadTask = storage
+          .ref(`images/${thumbnailName}`)
+          .putString(dataURL, "data_url");
+        uploadTask.on(
+          "state_changed",
+          snapshot => {
+            //progress function
+            const progress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + "%";
+            console.log(progress);
+          },
+          error => {
+            //error function
+            console.log(error);
+          },
+          () => {
+            //image upload complete callback function
+            storage
+              .ref("images")
+              .child(thumbnailName)
+              .getDownloadURL()
+              .then(url => {
+                const id = create_UUID();
+                const timeStamp = +new Date();
+                const payload = { id, url, thumbnailName, timeStamp };
+                dbImagesRef.add(payload);
+              });
+          }
+        );
       };
     };
     reader.readAsDataURL(image);
