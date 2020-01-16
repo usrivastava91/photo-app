@@ -1,0 +1,7 @@
+.image-grid {
+  height: 400px;
+  overflow: auto;
+}
+img {
+  cursor: pointer;
+}

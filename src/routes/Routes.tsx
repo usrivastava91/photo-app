@@ -10,7 +10,7 @@ const testRoute: IRoute = {
 
 const imageUploaderRoute: IRoute = {
   path: "/upload",
-  component: Doodle
+  component: ImageUploader
 };
 
 const imageDisplayGridRoute: IRoute = {

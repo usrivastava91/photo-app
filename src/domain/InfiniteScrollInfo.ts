@@ -1,9 +1,9 @@
 export default interface InfiniteScrollInfo {
-  allposts: [];
-  posts: [];
-  hasMore: true;
-  curpage: 0;
-  pagesize: 30;
-  totalPage: 0;
-  total: 0;
+  allposts: string[];
+  posts: string[];
+  hasMore: boolean;
+  curpage: number;
+  pagesize: number;
+  totalPage: number;
+  total: number;
 }

@@ -134,10 +134,10 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
       let tempImg = new Image();
       tempImg.src = reader.result as string;
       tempImg.onload = function() {
-        var MAX_WIDTH = 200;
-        var MAX_HEIGHT = 200;
-        var tempW = tempImg.width;
-        var tempH = tempImg.height;
+        let MAX_WIDTH = 200;
+        let MAX_HEIGHT = 200;
+        let tempW = tempImg.width;
+        let tempH = tempImg.height;
         if (tempW > tempH) {
           if (tempW > MAX_WIDTH) {
             tempH *= MAX_WIDTH / tempW;
@@ -149,12 +149,12 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
             tempH = MAX_HEIGHT;
           }
         }
-        var canvas = document.createElement("canvas");
+        let canvas = document.createElement("canvas");
         canvas.width = tempW;
         canvas.height = tempH;
-        var ctx = canvas.getContext("2d")!;
+        let ctx = canvas.getContext("2d")!;
         ctx.drawImage(tempImg, 0, 0, tempW, tempH);
-        var dataURL = canvas.toDataURL("image/jpeg");
+        let dataURL = canvas.toDataURL("image/jpeg");
 
         //UPLOADING THUMBNAIL
         const db = fire.firestore();
