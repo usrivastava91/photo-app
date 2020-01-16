@@ -1,10 +1,16 @@
 //domain imports
 import ImageInfo from "../../domain/ImageInfo";
 import ThumbnailInfo from "../../domain/ThumbnailInfo";
-import { setImageInfoTypes, setThumbnailInfoTypes } from "../../domain/Actions";
+import InfiniteScrollInfo from "../../domain/InfiniteScrollInfo";
+import {
+  setImageInfoTypes,
+  setThumbnailInfoTypes,
+  setInfiniteScrollInfoTypes
+} from "../../domain/Actions";
 
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
 const SET_THUMBNAIL_INFO = "SET_THUMBNAIL_INFO";
+const SET_INFINITE_SCROLL_INFO = "SET_INFINITE_SCROLL_INFO";
 
 export function setImageInfo(ImageInfo: ImageInfo): setImageInfoTypes {
   return {
@@ -19,5 +25,14 @@ export function setThumbnailInfo(
   return {
     type: SET_THUMBNAIL_INFO,
     payload: ThumbnailInfo
+  };
+}
+
+export function setInfiniteScrollInfo(
+  InfiniteScrollInfo: InfiniteScrollInfo
+): setInfiniteScrollInfoTypes {
+  return {
+    type: SET_INFINITE_SCROLL_INFO,
+    payload: InfiniteScrollInfo
   };
 }

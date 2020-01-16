@@ -1,5 +1,6 @@
 import React from "react";
-import { setImageInfo, setThumbnailInfo } from "../store/images/actions";
+import { setThumbnailInfo } from "../store/images/actions";
+import { setImageInfo } from "../store/images/actions";
 import { ImageUploader } from "../components/ImageUploader";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
@@ -51,6 +52,15 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
             const { setThumbnailInfo } = this.props;
             debugger;
             setThumbnailInfo(payload);
+          } else if (data.imageName) {
+            const url = data.url;
+            const imageName = data.imageName;
+            const timeStamp = data.timeStamp;
+            const id = create_UUID();
+            const payload = { id, url, imageName, timeStamp };
+            const { setImageInfo } = this.props;
+            setImageInfo(payload);
+            debugger;
           }
         });
       });
@@ -65,7 +75,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     return (
       <ol>
         {Thumbnails.map((thumbnail, index) => {
-          return <li key={index}>{thumbnail.url}</li>;
+          return <img className="m-1" key={index} src={thumbnail.url} alt="" />;
         })}
       </ol>
     );
@@ -76,6 +86,7 @@ const mapStateToProps = (state: ImagesStore) => {
     Thumbnails: state.setThumbnailInfo
   };
 };
-export const ImageDisplayGrid = connect(mapStateToProps, { setThumbnailInfo })(
-  _ImageDisplayGrid
-);
+export const ImageDisplayGrid = connect(mapStateToProps, {
+  setThumbnailInfo,
+  setImageInfo
+})(_ImageDisplayGrid);

@@ -179,12 +179,14 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
             console.log(error);
           },
           () => {
-            //image upload complete callback function
+            //image upload complete function
             storage
               .ref("images")
               .child(thumbnailName)
               .getDownloadURL()
               .then(url => {
+                //Uploading the imageInfo to firestore db. Will use the url from the db to
+                //fetch and display the images
                 const id = create_UUID();
                 const timeStamp = +new Date();
                 const payload = { id, url, thumbnailName, timeStamp };

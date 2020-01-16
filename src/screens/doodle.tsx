@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import axios from "axios";
 import InfiniteScroll from "react-infinite-scroller";
+import ImageInfo from "../domain/ImageInfo";
+import ThumbnailInfo from "../domain/ThumbnailInfo";
+import { setImageInfo, setThumbnailInfo } from "../store/images/actions";
 import { Container, Row, Col, Image } from "react-bootstrap";
 const styles = (theme: { spacing: { unit: number } }) => ({
   root: {
@@ -10,7 +13,19 @@ const styles = (theme: { spacing: { unit: number } }) => ({
   }
 });
 
-class Doodle extends React.Component {
+interface storeProps {
+  Images: ImageInfo[];
+  Thumbnails: ThumbnailInfo[];
+}
+
+interface actionProps {
+  setImageInfo: typeof setImageInfo;
+  setThumbnailInfo: typeof setThumbnailInfo;
+}
+
+interface DoodleProps extends storeProps, actionProps {}
+
+class Doodle extends React.Component<DoodleProps> {
   state = {
     allposts: [],
     posts: [],
@@ -20,8 +35,11 @@ class Doodle extends React.Component {
     totalPage: 0,
     total: 0
   };
-
+  constructor(props: DoodleProps) {
+    super(props);
+  }
   componentDidMount() {
+    let thumb;
     axios
       .get("https://jsonplaceholder.typicode.com/posts") //100 images
       .then((res: { data: string | any[] }) => {
