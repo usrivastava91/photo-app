@@ -24,6 +24,7 @@
     "react": "^16.12.0",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.12.0",
+    "react-dropzone": "^10.2.1",
     "react-file-drop": "^0.2.8",
     "react-infinite-scroller": "^1.2.4",
     "react-redux": "^7.1.0",

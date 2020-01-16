@@ -4,8 +4,18 @@ import { ImagesStore } from "../store/images/store";
 import { storage, fire } from "../fire";
 import { useHistory } from "react-router-dom";
 import create_UUID from "../utils/uuid";
-interface ImageUploaderProps {}
+import { useDropzone } from "react-dropzone";
+import { ProgressBar, Toast, Button } from "react-bootstrap";
+import "./ImageUploader.css";
+import { setUploadProgress } from "../store/images/actions";
 
+interface storeProps {
+  uploadProgress: number;
+}
+interface actionProps {
+  setUploadProgress: typeof setUploadProgress;
+}
+interface ImageUploaderProps extends storeProps, actionProps {}
 const _ImageUploader: React.FC<ImageUploaderProps> = (
   props: ImageUploaderProps
 ) => {
@@ -115,10 +125,8 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
 
   let images: File[] = [];
   const history = useHistory();
-  const handleOnChange = (e: any) => {
-    [...images] = [...e.target.files];
-  };
-
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  [...images] = [...acceptedFiles];
   //WHAT: Pre-prossesing the image to resize it to a smaller size, and upload it along with the original image.
   //WHY: At the page load, To prevent long loading time,  we will only download the small images and show them as thumbnails in the display grid.
   //HOW:
@@ -170,9 +178,10 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
           "state_changed",
           snapshot => {
             //progress function
-            const progress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + "%";
-            console.log(progress);
+            let uploadProgress =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+            console.log(uploadProgress);
           },
           error => {
             //error function
@@ -213,9 +222,10 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
         "state_changed",
         snapshot => {
           //progress function
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100 + "%";
-          console.log(progress);
+          const uploadProgress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          props.setUploadProgress(uploadProgress);
+          console.log(uploadProgress);
         },
         error => {
           //error function
@@ -250,15 +260,32 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
     history.push("/");
   };
   return (
-    <div>
-      <input type="file" onChange={handleOnChange} multiple />
-      <button onClick={uploadImages}> upload</button>
-      <button onClick={routeToDisplay}>Back to display</button>
+    <div className="container mt-5">
+      {props.uploadProgress === 100 ? (
+        <Toast className="success-toast">
+          <Toast.Body>Image successfully uploaded</Toast.Body>
+        </Toast>
+      ) : null}
+      <div {...getRootProps({ className: "dropzone" })}>
+        <input {...getInputProps()} />
+        <p>Drag 'n' drop some files here, or click to select files</p>
+      </div>
+      <ProgressBar className="mt-1" now={props.uploadProgress} />
+      <div className=" mt-3 d-flex justify-content-center">
+        <Button className="mr-2" onClick={uploadImages}>
+          upload
+        </Button>
+        <Button onClick={routeToDisplay}>Back to display</Button>
+      </div>
     </div>
   );
 };
 
 const mapStateToProps = (state: ImagesStore) => {
-  return {};
+  return {
+    uploadProgress: state.setUploadProgress
+  };
 };
-export const ImageUploader = connect(mapStateToProps, {})(_ImageUploader);
+export const ImageUploader = connect(mapStateToProps, { setUploadProgress })(
+  _ImageUploader
+);

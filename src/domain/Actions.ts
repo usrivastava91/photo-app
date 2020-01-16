@@ -17,4 +17,8 @@ export interface setInfiniteScrollInfoTypes {
   payload: InfiniteScrollInfo;
 }
 
+export interface setUploadProgressTypes {
+  type: string;
+  payload: number;
+}
 // export type ImageActionsTypes = setImageInfoTypes | setThumbnailInfoTypes;
