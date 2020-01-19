@@ -21,4 +21,9 @@ export interface setUploadProgressTypes {
   type: string;
   payload: number;
 }
+
+export interface setCurrentImageUrlTypes {
+  type: string;
+  payload: string;
+}
 // export type ImageActionsTypes = setImageInfoTypes | setThumbnailInfoTypes;

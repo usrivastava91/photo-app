@@ -2,7 +2,8 @@ import React from "react";
 import {
   setThumbnailInfo,
   setImageInfo,
-  setInfiniteScrollInfo
+  setInfiniteScrollInfo,
+  setCurrentImageUrl
 } from "../store/images/actions";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
@@ -10,11 +11,9 @@ import ImageInfo from "../domain/ImageInfo";
 import ThumbnailInfo from "../domain/ThumbnailInfo";
 import { InfiniteScrollInfo, allPostType } from "../domain/InfiniteScrollInfo";
 import { fire } from "../fire";
-import { Container, Row, Col, Image, Carousel, Button } from "react-bootstrap";
 import create_UUID from "../utils/uuid";
 import InfiniteScroll from "react-infinite-scroller";
 import { withRouter } from "react-router-dom";
-import FullSizeImageModal from "./FullSizeImageModal";
 import "./ImageDisplayGrid.css";
 
 interface storeProps {
@@ -27,6 +26,7 @@ interface actionProps {
   setImageInfo: typeof setImageInfo;
   setThumbnailInfo: typeof setThumbnailInfo;
   setInfiniteScrollInfo: typeof setInfiniteScrollInfo;
+  setCurrentImageUrl: typeof setCurrentImageUrl;
 }
 
 interface ImageDisplayGridProps extends storeProps, actionProps {
@@ -191,10 +191,12 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     // carouselView.style.display = "block";
     const { history } = this.props;
     const currentImageUrl = event.target.getAttribute("data-imgurl");
-    console.log("URLSLSALGLASLFASL", currentImageUrl);
+    // console.log("URLSLSALGLASLFASL", currentImageUrl);
+    const { setCurrentImageUrl } = this.props;
+    setCurrentImageUrl(currentImageUrl);
     history.push({
-      pathname: "/FullScreen",
-      state: { currentImage: currentImageUrl }
+      pathname: "/FullScreen"
+      // state: { currentImage: currentImageUrl }
     });
   };
 
@@ -206,7 +208,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
   render() {
     const { Images = [], InfiniteScrollInfo } = this.props;
-    console.log(Images);
+    // console.log(Images);
     return (
       <div className="d-flex justify-content-center">
         <div ref={this.imageGridRef} className="image-grid">
@@ -230,7 +232,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                     "thumbnail_",
                     ""
                   );
-                  debugger;
+                  // debugger;
                   let currentImg = Images.filter(image => {
                     return image.imageName === currentImgName;
                   });
@@ -286,7 +288,8 @@ const mapStateToProps = (state: ImagesStore) => {
 const __ImageDisplayGrid = connect(mapStateToProps, {
   setThumbnailInfo,
   setImageInfo,
-  setInfiniteScrollInfo
+  setInfiniteScrollInfo,
+  setCurrentImageUrl
 })(_ImageDisplayGrid);
 
 export const ImageDisplayGrid = withRouter(__ImageDisplayGrid);

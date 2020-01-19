@@ -6,13 +6,15 @@ import {
   setImageInfoTypes,
   setThumbnailInfoTypes,
   setInfiniteScrollInfoTypes,
-  setUploadProgressTypes
+  setUploadProgressTypes,
+  setCurrentImageUrlTypes
 } from "../../domain/Actions";
 
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
 const SET_THUMBNAIL_INFO = "SET_THUMBNAIL_INFO";
 const SET_INFINITE_SCROLL_INFO = "SET_INFINITE_SCROLL_INFO";
 const SET_UPLOAD_PROGRESS = "SET_UPLOAD_PROGRESS";
+const SET_CURRENT_IMAGE_URL = "SET_CURRENT_IMAGE_URL";
 export function setImageInfo(ImageInfo: ImageInfo): setImageInfoTypes {
   return {
     type: SET_IMAGE_INFO,
@@ -44,5 +46,14 @@ export function setUploadProgress(
   return {
     type: SET_UPLOAD_PROGRESS,
     payload: uploadProgress
+  };
+}
+
+export function setCurrentImageUrl(
+  currentImageUrl: string
+): setCurrentImageUrlTypes {
+  return {
+    type: SET_CURRENT_IMAGE_URL,
+    payload: currentImageUrl
   };
 }

@@ -6,4 +6,5 @@ export interface ImagesStore {
   setThumbnailInfo: [ThumbnailInfo];
   setInfiniteScrollInfo: InfiniteScrollInfo;
   setUploadProgress: number;
+  setCurrentImageUrl: string;
 }

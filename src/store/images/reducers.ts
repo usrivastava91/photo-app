@@ -3,18 +3,20 @@ import {
   setImageInfoTypes,
   setThumbnailInfoTypes,
   setInfiniteScrollInfoTypes,
-  setUploadProgressTypes
+  setUploadProgressTypes,
+  setCurrentImageUrlTypes
 } from "../../domain/Actions";
 import ImageInfo from "../../domain/ImageInfo";
 import ThumbnailInfo from "../../domain/ThumbnailInfo";
 import { InfiniteScrollInfo } from "../../domain/InfiniteScrollInfo";
 import create_UUID from "../../utils/uuid";
 import { stat } from "fs";
-import { setUploadProgress } from "./actions";
+import { setUploadProgress, setCurrentImageUrl } from "./actions";
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
 const SET_THUMBNAIL_INFO = "SET_THUMBNAIL_INFO";
 const SET_INFINITE_SCROLL_INFO = "SET_INFINITE_SCROLL_INFO";
 const SET_UPLOAD_PROGRESS = "SET_UPLOAD_PROGRESS";
+const SET_CURRENT_IMAGE_URL = "SET_CURRENT_IMAGE_URL";
 
 export const ImageReducer = {
   setImageInfo(
@@ -128,6 +130,15 @@ export const ImageReducer = {
   setUploadProgress(state: number = 0, action: setUploadProgressTypes) {
     switch (action.type) {
       case SET_UPLOAD_PROGRESS: {
+        return action.payload;
+      }
+      default:
+        return state;
+    }
+  },
+  setCurrentImageUrl(state: string = "", action: setCurrentImageUrlTypes) {
+    switch (action.type) {
+      case SET_CURRENT_IMAGE_URL: {
         return action.payload;
       }
       default:
