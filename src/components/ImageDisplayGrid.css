@@ -1,7 +1,19 @@
 .image-grid {
   height: 400px;
   overflow: auto;
+  /* display: none; */
 }
 img {
   cursor: pointer;
+}
+
+.carousel-exit-btn {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
+
+.img-carousel img {
+  max-height: 90vh;
+  max-width: 90vw;
 }

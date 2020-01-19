@@ -122,7 +122,6 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
     "bar",
     "bare"
   ];
-
   let images: File[] = [];
   const history = useHistory();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -142,8 +141,8 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
       let tempImg = new Image();
       tempImg.src = reader.result as string;
       tempImg.onload = function() {
-        let MAX_WIDTH = 200;
-        let MAX_HEIGHT = 200;
+        let MAX_WIDTH = 240;
+        let MAX_HEIGHT = 240;
         let tempW = tempImg.width;
         let tempH = tempImg.height;
         if (tempW > tempH) {
@@ -215,7 +214,7 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
       timestampsInSnapshots: true
     });
     const dbImagesRef = db.collection("Images");
-    images.forEach((image: any) => {
+    images.forEach((image: File) => {
       const imageName = image.name;
       const uploadTask = storage.ref(`images/${imageName}`).put(image);
       uploadTask.on(

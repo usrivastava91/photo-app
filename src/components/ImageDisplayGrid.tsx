@@ -10,11 +10,16 @@ import ImageInfo from "../domain/ImageInfo";
 import ThumbnailInfo from "../domain/ThumbnailInfo";
 import InfiniteScrollInfo from "../domain/InfiniteScrollInfo";
 import { fire } from "../fire";
-import { Container, Row, Col, Image } from "react-bootstrap";
+import { Container, Row, Col, Image, Carousel, Button } from "react-bootstrap";
 import create_UUID from "../utils/uuid";
 import InfiniteScroll from "react-infinite-scroller";
+import { withRouter } from "react-router-dom";
 import FullSizeImageModal from "./FullSizeImageModal";
 import "./ImageDisplayGrid.css";
+interface allPostType {
+  url: string;
+  name: string;
+}
 interface storeProps {
   Images: ImageInfo[];
   Thumbnails: ThumbnailInfo[];
@@ -27,15 +32,48 @@ interface actionProps {
   setInfiniteScrollInfo: typeof setInfiniteScrollInfo;
 }
 
-interface ImageDisplayGridProps extends storeProps, actionProps {}
+interface ImageDisplayGridProps extends storeProps, actionProps {
+  history: any;
+}
 
 class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
+  carouselRef: React.RefObject<HTMLDivElement>;
+  imageGridRef: React.RefObject<HTMLDivElement>;
+  // currentImageUrl = "";
   constructor(props: ImageDisplayGridProps) {
     super(props);
+    this.carouselRef = React.createRef();
+    this.imageGridRef = React.createRef();
+    // let carouselView = this.carouselRef.current;
+    // console.log("REFFFFFF", this.carouselRef, this.imageGridRef);
+    // if (carouselView !== null) {
+    //   carouselView.style.display = "none";
+    // }
+
+    // let imageGridView = this.imageGridRef.current;
+    // if (imageGridView !== null) {
+    //   imageGridView.style.display = "block";
+    // }
   }
+  dummyUrls = [
+    "https://fakeimg.pl/1600x1200/?text=abc&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=def&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=ghi&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=jkl&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=mno&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=pqr&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=stu&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=vwx&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=yz1&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=234&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=567&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=890&font=lobster",
+    "https://fakeimg.pl/1600x1200/?text=last&font=lobster"
+  ];
   modalShow: boolean = false;
+
   InfiniteScrollInfo = {
-    allposts: [] as string[],
+    allposts: [],
     posts: [] as string[],
     hasMore: true,
     curpage: 0,
@@ -45,6 +83,8 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
 
   async componentDidMount() {
+    // let carouselView = this.carouselRef.current!;
+    // carouselView.style.display = "none";
     await this.fetchThumbnailsInfofromDB();
     await this.initializingInfiniteScroll();
   }
@@ -144,59 +184,92 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   }
 
   renderFullView = (event: any) => {
-    debugger;
-    // const [modalShow, setModalShow] = React.useState(false);
-    // modalShow = !this.modalShow;
-    // this.modalShow = true;
-    // this.forceUpdate();
-    const target = event.target;
-    const imgUrl = target.getAttribute("data-imgurl");
-    window.open(imgUrl, "_blank");
+    // let imageGridView = this.imageGridRef.current!;
+    // imageGridView.style.display = "none";
+    // debugger;
+    // const target = event.target;
+    // this.currentImageUrl = target.getAttribute("data-imgurl");
+    // // window.open(imgUrl, "_blank");
+    // let carouselView = this.carouselRef.current!;
+    // carouselView.style.display = "block";
+    const { history } = this.props;
+    const currentImageUrl = event.target.getAttribute("data-imgurl");
+    history.push({
+      pathname: "/FullScreen",
+      state: { currentImage: currentImageUrl }
+    });
   };
 
+  renderGridView = (event: any) => {
+    let imageGridView = this.imageGridRef.current!;
+    imageGridView.style.display = "block";
+    let carouselView = this.carouselRef.current!;
+    carouselView.style.display = "none";
+  };
   render() {
     const { Images = [], InfiniteScrollInfo } = this.props;
     console.log(Images);
     return (
-      <div className="image-grid">
-        <InfiniteScroll
-          pageStart={0}
-          loadMore={this.loadmoreItem}
-          hasMore={InfiniteScrollInfo.hasMore}
-          loader={
-            <div className="loader" key={0}>
-              ruko ...
+      <div className="d-flex justify-content-center">
+        <div ref={this.imageGridRef} className="image-grid">
+          <InfiniteScroll
+            pageStart={0}
+            loadMore={this.loadmoreItem}
+            hasMore={InfiniteScrollInfo.hasMore}
+            loader={
+              <div className="loader" key={0}>
+                ruko ...
+              </div>
+            }
+            useWindow={false}
+            threshold={550}
+          >
+            <div className="d-flex justify-content-center flex-wrap">
+              {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
+                let imgUrl = "";
+                if (Images.length > 0) {
+                  debugger;
+                  imgUrl = Images[index].url;
+                  //TODO: FIND OUT imgUrl by taking the name of the thumbnail,
+                  //remove thumbnail_, and then look for the url of the object
+                  //with that name in Images array
+                }
+                return (
+                  <img
+                    data-imgurl={imgUrl}
+                    data-index={index}
+                    onClick={this.renderFullView}
+                    className="m-1"
+                    key={index}
+                    src={thumbnail}
+                    alt=""
+                  />
+                );
+              })}
             </div>
-          }
-          useWindow={false}
-          threshold={550}
-        >
-          <div className="d-flex justify-content-center flex-wrap">
-            {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
-              debugger;
-              let imgUrl = "";
-              if (Images.length > 0) {
-                debugger;
-                imgUrl = Images[index].url;
-              }
+          </InfiniteScroll>
+        </div>
+        <div className="full-view-carousel" ref={this.carouselRef}>
+          {/* <Button className="carousel-exit-btn" onClick={this.renderGridView}>
+            return to image grid
+          </Button> */}
+
+          {/* <Carousel className="img-carousel">
+            {this.dummyUrls.map((image, index) => {
               return (
-                <img
-                  data-imgurl={imgUrl}
-                  onClick={this.renderFullView}
-                  className="m-1"
-                  key={index}
-                  src={thumbnail}
-                  alt=""
-                />
+                <Carousel.Item key={index}>
+                  <img className="d-block" src={image} alt="First slide" />
+                  <Carousel.Caption>
+                    <h3>First slide label</h3>
+                    <p>
+                      Nulla vitae elit libero, a pharetra augue mollis interdum.
+                    </p>
+                  </Carousel.Caption>
+                </Carousel.Item>
               );
             })}
-            {/* {this.modalShow == true ? (
-              <FullSizeImageModal
-                onHide={() => (this.modalShow = !this.modalShow)}
-              />
-            ) : null} */}
-          </div>
-        </InfiniteScroll>
+          </Carousel> */}
+        </div>
       </div>
     );
   }
@@ -208,8 +281,12 @@ const mapStateToProps = (state: ImagesStore) => {
     Images: state.setImageInfo
   };
 };
-export const ImageDisplayGrid = connect(mapStateToProps, {
+const __ImageDisplayGrid = connect(mapStateToProps, {
   setThumbnailInfo,
   setImageInfo,
   setInfiniteScrollInfo
 })(_ImageDisplayGrid);
+
+export const ImageDisplayGrid = withRouter(__ImageDisplayGrid);
+
+// export default ImageDisplayGrid;
