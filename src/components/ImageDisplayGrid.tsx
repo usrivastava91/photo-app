@@ -8,7 +8,7 @@ import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
 import ImageInfo from "../domain/ImageInfo";
 import ThumbnailInfo from "../domain/ThumbnailInfo";
-import InfiniteScrollInfo from "../domain/InfiniteScrollInfo";
+import { InfiniteScrollInfo, allPostType } from "../domain/InfiniteScrollInfo";
 import { fire } from "../fire";
 import { Container, Row, Col, Image, Carousel, Button } from "react-bootstrap";
 import create_UUID from "../utils/uuid";
@@ -16,10 +16,7 @@ import InfiniteScroll from "react-infinite-scroller";
 import { withRouter } from "react-router-dom";
 import FullSizeImageModal from "./FullSizeImageModal";
 import "./ImageDisplayGrid.css";
-interface allPostType {
-  url: string;
-  name: string;
-}
+
 interface storeProps {
   Images: ImageInfo[];
   Thumbnails: ThumbnailInfo[];
@@ -73,7 +70,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   modalShow: boolean = false;
 
   InfiniteScrollInfo = {
-    allposts: [],
+    allposts: [] as allPostType[],
     posts: [] as string[],
     hasMore: true,
     curpage: 0,
@@ -96,8 +93,8 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       InfiniteScrollInfo
     } = this.props;
 
-    let allPosts = Thumbnails.map(({ url }) => {
-      return url;
+    let allPosts = Thumbnails.map(({ url, thumbnailName }) => {
+      return { url, thumbnailName };
     });
     let curpage = this.InfiniteScrollInfo.curpage;
 
@@ -194,6 +191,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     // carouselView.style.display = "block";
     const { history } = this.props;
     const currentImageUrl = event.target.getAttribute("data-imgurl");
+    console.log("URLSLSALGLASLFASL", currentImageUrl);
     history.push({
       pathname: "/FullScreen",
       state: { currentImage: currentImageUrl }
@@ -226,22 +224,26 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
           >
             <div className="d-flex justify-content-center flex-wrap">
               {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
-                let imgUrl = "";
+                let currentImgUrl = "";
                 if (Images.length > 0) {
+                  const currentImgName = thumbnail.thumbnailName.replace(
+                    "thumbnail_",
+                    ""
+                  );
                   debugger;
-                  imgUrl = Images[index].url;
-                  //TODO: FIND OUT imgUrl by taking the name of the thumbnail,
-                  //remove thumbnail_, and then look for the url of the object
-                  //with that name in Images array
+                  let currentImg = Images.filter(image => {
+                    return image.imageName === currentImgName;
+                  });
+                  currentImgUrl = currentImg[0].url;
                 }
                 return (
                   <img
-                    data-imgurl={imgUrl}
+                    data-imgurl={currentImgUrl}
                     data-index={index}
                     onClick={this.renderFullView}
                     className="m-1"
                     key={index}
-                    src={thumbnail}
+                    src={thumbnail.url}
                     alt=""
                   />
                 );

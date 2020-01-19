@@ -1,7 +1,7 @@
 //misc imports
 import ImageInfo from "./ImageInfo";
 import setThumbnailInfo from "./ThumbnailInfo";
-import InfiniteScrollInfo from "./InfiniteScrollInfo";
+import { InfiniteScrollInfo } from "./InfiniteScrollInfo";
 export interface setImageInfoTypes {
   type: string;
   payload: ImageInfo;

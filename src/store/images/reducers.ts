@@ -7,7 +7,7 @@ import {
 } from "../../domain/Actions";
 import ImageInfo from "../../domain/ImageInfo";
 import ThumbnailInfo from "../../domain/ThumbnailInfo";
-import InfiniteScrollInfo from "../../domain/InfiniteScrollInfo";
+import { InfiniteScrollInfo } from "../../domain/InfiniteScrollInfo";
 import create_UUID from "../../utils/uuid";
 import { stat } from "fs";
 import { setUploadProgress } from "./actions";
