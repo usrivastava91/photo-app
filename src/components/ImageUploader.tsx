@@ -126,15 +126,10 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
   const history = useHistory();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   [...images] = [...acceptedFiles];
+
   //WHAT: Pre-prossesing the image to resize it to a smaller size, and upload it along with the original image.
   //WHY: At the page load, To prevent long loading time,  we will only download the small images and show them as thumbnails in the display grid.
   //HOW:
-  const uploadThumbnail = async () => {
-    images.forEach(image => {
-      resizeImageToThumbnail(image);
-    });
-  };
-
   const resizeImageToThumbnail = (image: File) => {
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -162,102 +157,111 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
         let ctx = canvas.getContext("2d")!;
         ctx.drawImage(tempImg, 0, 0, tempW, tempH);
         let dataURL = canvas.toDataURL("image/jpeg");
-
-        //UPLOADING THUMBNAIL
-        const db = fire.firestore();
-        db.settings({
-          timestampsInSnapshots: true
-        });
-        const dbImagesRef = db.collection("Images");
         const thumbnailName = `thumbnail_${image.name}`;
-        const uploadTask = storage
-          .ref(`images/${thumbnailName}`)
-          .putString(dataURL, "data_url");
-        uploadTask.on(
-          "state_changed",
-          snapshot => {
-            //progress function
-            let uploadProgress =
-              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-            console.log(uploadProgress);
-          },
-          error => {
-            //error function
-            console.log(error);
-          },
-          () => {
-            //image upload complete function
-            storage
-              .ref("images")
-              .child(thumbnailName)
-              .getDownloadURL()
-              .then(url => {
-                //Uploading the imageInfo to firestore db. Will use the url from the db to
-                //fetch and display the images
-                const id = create_UUID();
-                const timeStamp = +new Date();
-                const payload = { id, url, thumbnailName, timeStamp };
-                dbImagesRef.add(payload);
-              });
-          }
-        );
+        uploadThumbnailToDB(dataURL, thumbnailName);
       };
     };
     reader.readAsDataURL(image);
   };
 
-  const uploadImages = () => {
-    uploadThumbnail();
+  const uploadThumbnailToDB = (dataURL: string, thumbnailName: string) => {
     const db = fire.firestore();
     db.settings({
       timestampsInSnapshots: true
     });
     const dbImagesRef = db.collection("Images");
+    const uploadTask = storage
+      .ref(`images/${thumbnailName}`)
+      .putString(dataURL, "data_url");
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        //progress function
+        let uploadProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+        console.log(uploadProgress);
+      },
+      error => {
+        //error function
+        console.log(error);
+      },
+      () => {
+        //image upload complete function
+        storage
+          .ref("images")
+          .child(thumbnailName)
+          .getDownloadURL()
+          .then(url => {
+            //Uploading the imageInfo to firestore db. Will use the url from the db to
+            //fetch and display the images
+            const id = create_UUID();
+            const timeStamp = +new Date();
+            const payload = { id, url, thumbnailName, timeStamp };
+            dbImagesRef.add(payload);
+          });
+      }
+    );
+  };
+
+  const uploadImagesToDB = (image: File, imageName: string) => {
+    const db = fire.firestore();
+    db.settings({
+      timestampsInSnapshots: true
+    });
+    const dbImagesRef = db.collection("Images");
+    const uploadTask = storage.ref(`images/${imageName}`).put(image);
+    uploadTask.on(
+      "state_changed",
+      snapshot => {
+        //progress function
+        const uploadProgress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        props.setUploadProgress(uploadProgress);
+      },
+      error => {
+        //error function
+        console.log(error);
+      },
+
+      () => {
+        //On image upload complete,store the image information(url, id, name, timestamp)
+        //in a seperate firestorage,to be used to load images in the Image view page.
+        storage
+          .ref("images")
+          .child(image.name)
+          .getDownloadURL()
+          .then(url => {
+            const id = create_UUID();
+            const timeStamp = +new Date();
+            const payload = { id, url, imageName, timeStamp };
+            dbImagesRef.add(payload);
+            // console.log("length", randomWords.length);
+            // randomWords.forEach(word => {
+            //   const url = `https://fakeimg.pl/1600x1200/?text=${word}&font=lobster`;
+            //   const id = create_UUID();
+            //   const timeStamp = +new Date();
+            //   const imageName = word;
+            //   const payload = { id, url, imageName, timeStamp };
+            //   dbImagesRef.add(payload);
+            // });
+          });
+      }
+    );
+  };
+
+  const uploadImages = () => {
     images.forEach((image: File) => {
       const imageName = image.name;
-      const uploadTask = storage.ref(`images/${imageName}`).put(image);
-      uploadTask.on(
-        "state_changed",
-        snapshot => {
-          //progress function
-          const uploadProgress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          props.setUploadProgress(uploadProgress);
-          console.log(uploadProgress);
-        },
-        error => {
-          //error function
-          console.log(error);
-        },
-        () => {
-          //image upload complete callback function
-          storage
-            .ref("images")
-            .child(image.name)
-            .getDownloadURL()
-            .then(url => {
-              const id = create_UUID();
-              const timeStamp = +new Date();
-              const payload = { id, url, imageName, timeStamp };
-              dbImagesRef.add(payload);
-              // console.log("length", randomWords.length);
-              // randomWords.forEach(word => {
-              //   const url = `https://fakeimg.pl/1600x1200/?text=${word}&font=lobster`;
-              //   const id = create_UUID();
-              //   const timeStamp = +new Date();
-              //   const imageName = word;
-              //   const payload = { id, url, imageName, timeStamp };
-              //   dbImagesRef.add(payload);
-              // });
-            });
-        }
-      );
+      resizeImageToThumbnail(image);
+      uploadImagesToDB(image, imageName);
     });
   };
+
   const routeToDisplay = () => {
     history.push("/");
   };
+
   return (
     <div className="container mt-5">
       {props.uploadProgress === 100 ? (

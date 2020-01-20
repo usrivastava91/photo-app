@@ -34,41 +34,9 @@ interface ImageDisplayGridProps extends storeProps, actionProps {
 }
 
 class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
-  carouselRef: React.RefObject<HTMLDivElement>;
-  imageGridRef: React.RefObject<HTMLDivElement>;
-  // currentImageUrl = "";
   constructor(props: ImageDisplayGridProps) {
     super(props);
-    this.carouselRef = React.createRef();
-    this.imageGridRef = React.createRef();
-    // let carouselView = this.carouselRef.current;
-    // console.log("REFFFFFF", this.carouselRef, this.imageGridRef);
-    // if (carouselView !== null) {
-    //   carouselView.style.display = "none";
-    // }
-
-    // let imageGridView = this.imageGridRef.current;
-    // if (imageGridView !== null) {
-    //   imageGridView.style.display = "block";
-    // }
   }
-  dummyUrls = [
-    "https://fakeimg.pl/1600x1200/?text=abc&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=def&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=ghi&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=jkl&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=mno&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=pqr&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=stu&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=vwx&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=yz1&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=234&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=567&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=890&font=lobster",
-    "https://fakeimg.pl/1600x1200/?text=last&font=lobster"
-  ];
-  modalShow: boolean = false;
-
   InfiniteScrollInfo = {
     allposts: [] as allPostType[],
     posts: [] as string[],
@@ -80,8 +48,6 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
 
   async componentDidMount() {
-    // let carouselView = this.carouselRef.current!;
-    // carouselView.style.display = "none";
     await this.fetchThumbnailsInfofromDB();
     await this.initializingInfiniteScroll();
   }
@@ -147,6 +113,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
         pagesize: InfiniteScrollInfo.pagesize,
         totalPage: InfiniteScrollInfo.totalPage
       };
+      setInfiniteScrollInfo(payload);
     }
   };
   //WHAT: Fetches the URL, name, timestamp of all the Images from the firestore db.
@@ -181,37 +148,20 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   }
 
   renderFullView = (event: any) => {
-    // let imageGridView = this.imageGridRef.current!;
-    // imageGridView.style.display = "none";
-    // debugger;
-    // const target = event.target;
-    // this.currentImageUrl = target.getAttribute("data-imgurl");
-    // // window.open(imgUrl, "_blank");
-    // let carouselView = this.carouselRef.current!;
-    // carouselView.style.display = "block";
     const { history } = this.props;
     const currentImageUrl = event.target.getAttribute("data-imgurl");
-    // console.log("URLSLSALGLASLFASL", currentImageUrl);
     const { setCurrentImageUrl } = this.props;
     setCurrentImageUrl(currentImageUrl);
     history.push({
       pathname: "/FullScreen"
-      // state: { currentImage: currentImageUrl }
     });
-  };
-
-  renderGridView = (event: any) => {
-    let imageGridView = this.imageGridRef.current!;
-    imageGridView.style.display = "block";
-    let carouselView = this.carouselRef.current!;
-    carouselView.style.display = "none";
   };
   render() {
     const { Images = [], InfiniteScrollInfo } = this.props;
     // console.log(Images);
     return (
       <div className="d-flex justify-content-center">
-        <div ref={this.imageGridRef} className="image-grid">
+        <div className="image-grid">
           <InfiniteScroll
             pageStart={0}
             loadMore={this.loadmoreItem}
@@ -232,7 +182,6 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                     "thumbnail_",
                     ""
                   );
-                  // debugger;
                   let currentImg = Images.filter(image => {
                     return image.imageName === currentImgName;
                   });
@@ -253,27 +202,6 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
             </div>
           </InfiniteScroll>
         </div>
-        <div className="full-view-carousel" ref={this.carouselRef}>
-          {/* <Button className="carousel-exit-btn" onClick={this.renderGridView}>
-            return to image grid
-          </Button> */}
-
-          {/* <Carousel className="img-carousel">
-            {this.dummyUrls.map((image, index) => {
-              return (
-                <Carousel.Item key={index}>
-                  <img className="d-block" src={image} alt="First slide" />
-                  <Carousel.Caption>
-                    <h3>First slide label</h3>
-                    <p>
-                      Nulla vitae elit libero, a pharetra augue mollis interdum.
-                    </p>
-                  </Carousel.Caption>
-                </Carousel.Item>
-              );
-            })}
-          </Carousel> */}
-        </div>
       </div>
     );
   }
@@ -293,5 +221,3 @@ const __ImageDisplayGrid = connect(mapStateToProps, {
 })(_ImageDisplayGrid);
 
 export const ImageDisplayGrid = withRouter(__ImageDisplayGrid);
-
-// export default ImageDisplayGrid;
