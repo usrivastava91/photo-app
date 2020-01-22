@@ -96,6 +96,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     setInfiniteScrollInfo(payload);
   }
 
+  //triggering the infinite scroll on load of more images.
   loadmoreItem = () => {
     const { InfiniteScrollInfo, setInfiniteScrollInfo } = this.props;
     if (InfiniteScrollInfo.curpage + 1 < InfiniteScrollInfo.totalPage) {
@@ -131,6 +132,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     }
   };
 
+  //Rendering the loading spinner while image is loading
   handleImageLoadChange = () => {
     const { setImageLoadStatus } = this.props;
     setImageLoadStatus(!imagesLoaded(this.imageGridRef));
@@ -174,6 +176,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       });
   }
 
+  // on click of image, passing the current image's url to the FullImageCarousel component
   renderFullView = (event: any) => {
     const { history } = this.props;
     const currentImageUrl = event.target.getAttribute("data-imgurl");
@@ -184,7 +187,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     });
   };
   render() {
-    const { Images = [], InfiniteScrollInfo } = this.props;
+    const { InfiniteScrollInfo } = this.props;
     return (
       <div className="d-flex justify-content-center image-grid-container">
         {this.renderSpinner()}
@@ -193,11 +196,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
             pageStart={0}
             loadMore={this.loadmoreItem}
             hasMore={InfiniteScrollInfo.hasMore}
-            loader={
-              <div className="loader" key={0}>
-                ruko ...
-              </div>
-            }
+            loader={<div className="loader" key={0}></div>}
             useWindow={false}
             threshold={550}
           >

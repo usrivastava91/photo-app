@@ -5,7 +5,7 @@ import { storage, fire } from "../fire";
 import { useHistory } from "react-router-dom";
 import create_UUID from "../utils/uuid";
 import { useDropzone } from "react-dropzone";
-import { ProgressBar, Toast, Button } from "react-bootstrap";
+import { ProgressBar, Button, ListGroup } from "react-bootstrap";
 import "./ImageUploader.css";
 import { setUploadProgress } from "../store/images/actions";
 
@@ -19,117 +19,20 @@ interface ImageUploaderProps extends storeProps, actionProps {}
 const _ImageUploader: React.FC<ImageUploaderProps> = (
   props: ImageUploaderProps
 ) => {
-  const randomWords = [
-    "actual",
-    "actually",
-    "add",
-    "addition",
-    "additional",
-    "adjective",
-    "adult",
-    "adventure",
-    "advice",
-    "affect",
-    "afraid",
-    "after",
-    "afternoon",
-    "again",
-    "against",
-    "age",
-    "ago",
-    "agree",
-    "ahead",
-    "aid",
-    "air",
-    "airplane",
-    "alike",
-    "alive",
-    "all",
-    "allow",
-    "almost",
-    "alone",
-    "along",
-    "aloud",
-    "alphabet",
-    "already",
-    "also",
-    "although",
-    "am",
-    "among",
-    "amount",
-    "ancient",
-    "angle",
-    "angry",
-    "animal",
-    "announced",
-    "another",
-    "answer",
-    "ants",
-    "any",
-    "anybody",
-    "anyone",
-    "anything",
-    "anyway",
-    "anywhere",
-    "apart",
-    "apartment",
-    "appearance",
-    "apple",
-    "applied",
-    "appropriate",
-    "are",
-    "area",
-    "arm",
-    "army",
-    "around",
-    "arrange",
-    "arrangement",
-    "arrive",
-    "arrow",
-    "art",
-    "article",
-    "as",
-    "aside",
-    "ask",
-    "asleep",
-    "at",
-    "ate",
-    "atmosphere",
-    "atom",
-    "atomic",
-    "attached",
-    "attack",
-    "attempt",
-    "attention",
-    "audience",
-    "author",
-    "automobile",
-    "available",
-    "average",
-    "avoid",
-    "aware",
-    "away",
-    "baby",
-    "back",
-    "bad",
-    "badly",
-    "bag",
-    "balance",
-    "ball",
-    "balloon",
-    "band",
-    "bank",
-    "bar",
-    "bare"
-  ];
   let images: File[] = [];
   const history = useHistory();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   [...images] = [...acceptedFiles];
 
+  const listOfFilesUploaded = acceptedFiles.map(file => {
+    return (
+      <ListGroup.Item key={file.name}>
+        {file.name} -{file.size}
+      </ListGroup.Item>
+    );
+  });
   //WHAT: Pre-prossesing the image to resize it to a smaller size, and upload it along with the original image.
   //WHY: At the page load, To prevent long loading time,  we will only download the small images and show them as thumbnails in the display grid.
-  //HOW:
   const resizeImageToThumbnail = (image: File) => {
     const getRandom = (min: number, max: number) => {
       return Math.random() * (max - min) + min;
@@ -258,13 +161,9 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
 
   return (
     <div className="container mt-5">
-      {props.uploadProgress === 100 ? (
-        <Toast className="success-toast">
-          <Toast.Body>Image successfully uploaded</Toast.Body>
-        </Toast>
-      ) : null}
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
+        <ListGroup>{listOfFilesUploaded}</ListGroup>
         <p>Drag 'n' drop some files here, or click to select files</p>
       </div>
       <ProgressBar className="mt-1" now={props.uploadProgress} />

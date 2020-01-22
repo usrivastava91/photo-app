@@ -3,7 +3,6 @@ import { ImagesStore } from "../store/images/store";
 import { connect } from "react-redux";
 import { imagesLoaded } from "../utils/imagesLoaded";
 import { InfiniteScrollInfo, allPostType } from "../domain/InfiniteScrollInfo";
-
 import "./FullImageCarousel.css";
 import {
   setCurrentImageUrl,
@@ -28,8 +27,9 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
     super(props);
     this.imageRef = React.createRef();
   }
-  componentDidMount = () => {};
 
+  //Changing the opacity on image load for a transition effect, and setting the image load status
+  //to render the loading spinner
   handleImageLoadChange = () => {
     const image = this.imageRef.current!;
     image.style.opacity = "1";
@@ -51,7 +51,6 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
       currentImgUrl,
       setCurrentImageUrl
     } = this.props;
-    debugger;
     const currentImageInfo = InfiniteScrollInfo.allposts.filter(post => {
       return post.imgUrl == currentImgUrl;
     });
@@ -63,7 +62,6 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
         ? currentImageIndex
         : currentImageIndex + 1;
     const nextImageUrl = InfiniteScrollInfo.allposts[nextIndex].imgUrl;
-    console.table({ CurrentIndex: currentImageIndex, "next index": nextIndex });
     setCurrentImageUrl(nextImageUrl);
     const image = this.imageRef.current!;
     image.style.opacity = "0";
@@ -84,7 +82,6 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
     const prevIndex =
       currentImageIndex == 0 ? currentImageIndex : currentImageIndex - 1;
     const prevImageUrl = InfiniteScrollInfo.allposts[prevIndex].imgUrl;
-    console.table({ CurrentIndex: currentImageIndex, "prev index": prevIndex });
     setCurrentImageUrl(prevImageUrl);
     const image = this.imageRef.current!;
     image.style.opacity = "0";

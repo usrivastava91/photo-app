@@ -3,15 +3,14 @@
   overflow: auto;
 }
 img {
-  width: 100% !important;
-  height: auto !important;
+  width: 100%;
+  height: auto;
   cursor: pointer;
 }
 
 .image-grid {
   /* Prevent vertical gaps */
   line-height: 0;
-
   -webkit-column-count: 5;
   -webkit-column-gap: 0px;
   -moz-column-count: 5;
@@ -21,12 +20,12 @@ img {
 }
 
 html ::-webkit-scrollbar {
-  width: 0 !important;
+  width: 0;
 }
 
 .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border: 16px solid #f3f3f3;
+  border-top: 16px solid #3498db;
   border-radius: 50%;
   width: 120px;
   height: 120px;

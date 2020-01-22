@@ -3,7 +3,6 @@ import { Home } from "../screens/Home";
 import { ImageUploader } from "../components/ImageUploader";
 import { ImageDisplayGrid } from "../components/ImageDisplayGrid";
 import { FullImageCarousel } from "../components/FullImageCarousel";
-import Doodle from "../screens/doodle";
 const HomeRoute: IRoute = {
   path: "/",
   component: Home

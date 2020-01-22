@@ -14,12 +14,6 @@
   transition: border 0.24s ease-in-out;
 }
 
-.success-toast {
-  position: absolute;
-  top: 23%;
-  right: 43%;
-}
-
 .image-grid-container {
   height: 80vh;
 }
