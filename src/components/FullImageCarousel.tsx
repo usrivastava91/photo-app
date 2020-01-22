@@ -1,7 +1,6 @@
 import React from "react";
 import { ImagesStore } from "../store/images/store";
 import { connect } from "react-redux";
-import { Container, Row, Col, Image, Carousel, Button } from "react-bootstrap";
 import { imagesLoaded } from "../utils/imagesLoaded";
 import { InfiniteScrollInfo, allPostType } from "../domain/InfiniteScrollInfo";
 
@@ -32,16 +31,14 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
   componentDidMount = () => {};
 
   handleImageLoadChange = () => {
-    const abc = this.imageRef;
-    // debugger;
+    const image = this.imageRef.current!;
+    image.style.opacity = "1";
     const { setImageLoadStatus } = this.props;
     setImageLoadStatus(!imagesLoaded(this.imageRef));
   };
 
   renderSpinner() {
-    // debugger;
     const { ImageLoadStatus } = this.props;
-    // debugger;
     if (!ImageLoadStatus) {
       return null;
     }
@@ -68,6 +65,8 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
     const nextImageUrl = InfiniteScrollInfo.allposts[nextIndex].imgUrl;
     console.table({ CurrentIndex: currentImageIndex, "next index": nextIndex });
     setCurrentImageUrl(nextImageUrl);
+    const image = this.imageRef.current!;
+    image.style.opacity = "0";
   };
 
   onPrev = () => {
@@ -86,33 +85,34 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
       currentImageIndex == 0 ? currentImageIndex : currentImageIndex - 1;
     const prevImageUrl = InfiniteScrollInfo.allposts[prevIndex].imgUrl;
     console.table({ CurrentIndex: currentImageIndex, "prev index": prevIndex });
-
     setCurrentImageUrl(prevImageUrl);
+    const image = this.imageRef.current!;
+    image.style.opacity = "0";
   };
 
   render() {
     const { currentImgUrl } = this.props;
     return (
-      <div className="d-flex carousel justify-content-around">
+      <div className="d-flex carousel justify-content-around container">
         {this.renderSpinner()}
-        <Button className="prev align-self-center" onClick={this.onPrev}>
-          prev
-        </Button>
-        <div className="image" ref={this.imageRef}>
+        <i
+          className="fa fa-hand-o-left nav align-self-center fa-2x"
+          onClick={this.onPrev}
+          aria-hidden="true"
+        ></i>
+        <div className="image-container" ref={this.imageRef}>
           <img
-            className="full-image"
+            className="image"
             src={currentImgUrl}
             onLoad={this.handleImageLoadChange}
             onError={this.handleImageLoadChange}
           />
-          {/* <img
-            src="https://firebasestorage.googleapis.com/v0/b/photo-app-typito.appspot.com/o/images%2FZ2HAYEQKSQ.jpg?alt=media&token=52f85530-7dc5-4c94-bb2f-78d1460b4e05"
-            alt=""
-          /> */}
         </div>
-        <Button className="next align-self-center" onClick={this.onNext}>
-          next
-        </Button>
+        <i
+          className="fa fa-hand-o-right nav align-self-center fa-2x"
+          onClick={this.onNext}
+          aria-hidden="true"
+        ></i>
       </div>
     );
   }

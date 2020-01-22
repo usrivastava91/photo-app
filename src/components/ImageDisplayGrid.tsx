@@ -132,14 +132,12 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
 
   handleImageLoadChange = () => {
-    // debugger;
     const { setImageLoadStatus } = this.props;
     setImageLoadStatus(!imagesLoaded(this.imageGridRef));
   };
 
   renderSpinner() {
     const { ImageLoadStatus } = this.props;
-    // debugger;
     if (!ImageLoadStatus) {
       return null;
     }
@@ -205,19 +203,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
           >
             <div className="image-grid" ref={this.imageGridRef}>
               {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
-                let currentImgUrl = "";
-                if (Images.length > 0) {
-                  const currentImgName = thumbnail.thumbnailName.replace(
-                    "thumbnail_",
-                    ""
-                  );
-                  let currentImg = Images.filter(image => {
-                    return image.imageName === currentImgName;
-                  });
-                  // currentImgUrl = currentImg[0].url;
-                  currentImgUrl = thumbnail.imgUrl;
-                }
-
+                const currentImgUrl = thumbnail.imgUrl;
                 return (
                   <img
                     data-imgurl={currentImgUrl}
