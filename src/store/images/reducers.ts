@@ -135,7 +135,6 @@ export const ImageReducer = {
     }
   },
   CurrentImageUrl(state: string = "", action: setCurrentImageUrlTypes) {
-    debugger;
     switch (action.type) {
       case SET_CURRENT_IMAGE_URL: {
         return action.payload;

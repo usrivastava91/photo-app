@@ -10,6 +10,4 @@ const create_UUID = () => {
   return uuid;
 };
 
-console.log(create_UUID());
-
 export default create_UUID;

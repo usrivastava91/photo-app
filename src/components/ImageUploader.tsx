@@ -85,8 +85,6 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
         //progress function
         let uploadProgress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-
-        console.log(uploadProgress);
       },
       error => {
         //error function
