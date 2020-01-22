@@ -62,11 +62,19 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
     const {
       Thumbnails,
       setInfiniteScrollInfo,
-      InfiniteScrollInfo
+      InfiniteScrollInfo,
+      Images
     } = this.props;
 
     let allPosts = Thumbnails.map(({ url, thumbnailName }) => {
-      return { url, thumbnailName };
+      const currentImgName = thumbnailName.replace("thumbnail_", "");
+      const currentImage = Images.filter(image => {
+        return currentImgName === image.imageName;
+      });
+
+      const imgUrl = currentImage[0].url;
+
+      return { url, thumbnailName, imgUrl };
     });
     let curpage = this.InfiniteScrollInfo.curpage;
 
@@ -124,14 +132,14 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
 
   handleImageLoadChange = () => {
-    debugger;
+    // debugger;
     const { setImageLoadStatus } = this.props;
     setImageLoadStatus(!imagesLoaded(this.imageGridRef));
   };
 
   renderSpinner() {
     const { ImageLoadStatus } = this.props;
-    debugger;
+    // debugger;
     if (!ImageLoadStatus) {
       return null;
     }
@@ -206,7 +214,8 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                   let currentImg = Images.filter(image => {
                     return image.imageName === currentImgName;
                   });
-                  currentImgUrl = currentImg[0].url;
+                  // currentImgUrl = currentImg[0].url;
+                  currentImgUrl = thumbnail.imgUrl;
                 }
 
                 return (

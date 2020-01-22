@@ -1,6 +1,7 @@
 export interface allPostType {
   url: string;
   thumbnailName: string;
+  imgUrl: string;
 }
 export interface InfiniteScrollInfo {
   allposts: allPostType[];
