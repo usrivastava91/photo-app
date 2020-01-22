@@ -7,7 +7,8 @@ import {
   setThumbnailInfoTypes,
   setInfiniteScrollInfoTypes,
   setUploadProgressTypes,
-  setCurrentImageUrlTypes
+  setCurrentImageUrlTypes,
+  setImageLoadStatusTypes
 } from "../../domain/Actions";
 
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
@@ -15,6 +16,8 @@ const SET_THUMBNAIL_INFO = "SET_THUMBNAIL_INFO";
 const SET_INFINITE_SCROLL_INFO = "SET_INFINITE_SCROLL_INFO";
 const SET_UPLOAD_PROGRESS = "SET_UPLOAD_PROGRESS";
 const SET_CURRENT_IMAGE_URL = "SET_CURRENT_IMAGE_URL";
+const SET_IMAGE_LOAD_STATUS = "SET_IMAGE_LOAD_STATUS";
+
 export function setImageInfo(ImageInfo: ImageInfo): setImageInfoTypes {
   return {
     type: SET_IMAGE_INFO,
@@ -55,5 +58,14 @@ export function setCurrentImageUrl(
   return {
     type: SET_CURRENT_IMAGE_URL,
     payload: currentImageUrl
+  };
+}
+
+export function setImageLoadStatus(
+  imageLoadStatus: boolean
+): setImageLoadStatusTypes {
+  return {
+    type: SET_IMAGE_LOAD_STATUS,
+    payload: imageLoadStatus
   };
 }

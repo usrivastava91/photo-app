@@ -131,13 +131,16 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
   //WHY: At the page load, To prevent long loading time,  we will only download the small images and show them as thumbnails in the display grid.
   //HOW:
   const resizeImageToThumbnail = (image: File) => {
+    const getRandom = (min: number, max: number) => {
+      return Math.random() * (max - min) + min;
+    };
     const reader = new FileReader();
     reader.onloadend = () => {
       let tempImg = new Image();
       tempImg.src = reader.result as string;
       tempImg.onload = function() {
-        let MAX_WIDTH = 240;
-        let MAX_HEIGHT = 240;
+        let MAX_WIDTH = getRandom(180, 240);
+        let MAX_HEIGHT = getRandom(180, 240);
         let tempW = tempImg.width;
         let tempH = tempImg.height;
         if (tempW > tempH) {
@@ -236,15 +239,6 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
             const timeStamp = +new Date();
             const payload = { id, url, imageName, timeStamp };
             dbImagesRef.add(payload);
-            // console.log("length", randomWords.length);
-            // randomWords.forEach(word => {
-            //   const url = `https://fakeimg.pl/1600x1200/?text=${word}&font=lobster`;
-            //   const id = create_UUID();
-            //   const timeStamp = +new Date();
-            //   const imageName = word;
-            //   const payload = { id, url, imageName, timeStamp };
-            //   dbImagesRef.add(payload);
-            // });
           });
       }
     );

@@ -7,4 +7,5 @@ export interface ImagesStore {
   setInfiniteScrollInfo: InfiniteScrollInfo;
   setUploadProgress: number;
   setCurrentImageUrl: string;
+  setImageLoadStatus: boolean;
 }

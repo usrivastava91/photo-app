@@ -1,0 +1,9 @@
+.upload-btn {
+  cursor: pointer;
+  padding: 50px 50%;
+  height: 20vh;
+}
+
+.home {
+  overflow-x: hidden;
+}

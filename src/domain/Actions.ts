@@ -26,4 +26,9 @@ export interface setCurrentImageUrlTypes {
   type: string;
   payload: string;
 }
+
+export interface setImageLoadStatusTypes {
+  type: string;
+  payload: boolean;
+}
 // export type ImageActionsTypes = setImageInfoTypes | setThumbnailInfoTypes;

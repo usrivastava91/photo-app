@@ -1,12 +1,12 @@
 import { IRoute } from "./Route";
-import { Test } from "../screens/Test";
+import { Home } from "../screens/Home";
 import { ImageUploader } from "../components/ImageUploader";
 import { ImageDisplayGrid } from "../components/ImageDisplayGrid";
 import { FullImageCarousel } from "../components/FullImageCarousel";
 import Doodle from "../screens/doodle";
-const testRoute: IRoute = {
+const HomeRoute: IRoute = {
   path: "/",
-  component: Test
+  component: Home
 };
 
 const imageUploaderRoute: IRoute = {
@@ -25,7 +25,7 @@ const FullImageCarouselRoute: IRoute = {
 };
 
 export const Routes: IRoute[] = [
-  testRoute,
+  HomeRoute,
   imageUploaderRoute,
   imageDisplayGridRoute,
   FullImageCarouselRoute

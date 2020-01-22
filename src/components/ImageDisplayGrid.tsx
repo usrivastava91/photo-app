@@ -3,7 +3,8 @@ import {
   setThumbnailInfo,
   setImageInfo,
   setInfiniteScrollInfo,
-  setCurrentImageUrl
+  setCurrentImageUrl,
+  setImageLoadStatus
 } from "../store/images/actions";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
@@ -14,12 +15,14 @@ import { fire } from "../fire";
 import create_UUID from "../utils/uuid";
 import InfiniteScroll from "react-infinite-scroller";
 import { withRouter } from "react-router-dom";
+import { imagesLoaded } from "../utils/imagesLoaded";
 import "./ImageDisplayGrid.css";
 
 interface storeProps {
   Images: ImageInfo[];
   Thumbnails: ThumbnailInfo[];
   InfiniteScrollInfo: InfiniteScrollInfo;
+  ImageLoadStatus: boolean;
 }
 
 interface actionProps {
@@ -27,6 +30,7 @@ interface actionProps {
   setThumbnailInfo: typeof setThumbnailInfo;
   setInfiniteScrollInfo: typeof setInfiniteScrollInfo;
   setCurrentImageUrl: typeof setCurrentImageUrl;
+  setImageLoadStatus: typeof setImageLoadStatus;
 }
 
 interface ImageDisplayGridProps extends storeProps, actionProps {
@@ -34,8 +38,10 @@ interface ImageDisplayGridProps extends storeProps, actionProps {
 }
 
 class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
+  imageGridRef: React.RefObject<HTMLDivElement>;
   constructor(props: ImageDisplayGridProps) {
     super(props);
+    this.imageGridRef = React.createRef();
   }
   InfiniteScrollInfo = {
     allposts: [] as allPostType[],
@@ -116,6 +122,21 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       setInfiniteScrollInfo(payload);
     }
   };
+
+  handleImageLoadChange = () => {
+    debugger;
+    const { setImageLoadStatus } = this.props;
+    setImageLoadStatus(!imagesLoaded(this.imageGridRef));
+  };
+
+  renderSpinner() {
+    const { ImageLoadStatus } = this.props;
+    debugger;
+    if (!ImageLoadStatus) {
+      return null;
+    }
+    return <h2 className="loader"></h2>;
+  }
   //WHAT: Fetches the URL, name, timestamp of all the Images from the firestore db.
   //WHY: We need the URLs to fetch and display the images.
   async fetchThumbnailsInfofromDB() {
@@ -158,10 +179,10 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
   render() {
     const { Images = [], InfiniteScrollInfo } = this.props;
-    // console.log(Images);
     return (
-      <div className="d-flex justify-content-center">
-        <div className="image-grid">
+      <div className="d-flex justify-content-center image-grid-container">
+        {this.renderSpinner()}
+        <div className="">
           <InfiniteScroll
             pageStart={0}
             loadMore={this.loadmoreItem}
@@ -174,7 +195,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
             useWindow={false}
             threshold={550}
           >
-            <div className="d-flex justify-content-center flex-wrap">
+            <div className="image-grid" ref={this.imageGridRef}>
               {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
                 let currentImgUrl = "";
                 if (Images.length > 0) {
@@ -187,14 +208,16 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                   });
                   currentImgUrl = currentImg[0].url;
                 }
+
                 return (
                   <img
                     data-imgurl={currentImgUrl}
                     data-index={index}
                     onClick={this.renderFullView}
-                    className="m-1"
                     key={index}
                     src={thumbnail.url}
+                    onLoad={this.handleImageLoadChange}
+                    onError={this.handleImageLoadChange}
                     alt=""
                   />
                 );
@@ -210,14 +233,16 @@ const mapStateToProps = (state: ImagesStore) => {
   return {
     Thumbnails: state.setThumbnailInfo,
     InfiniteScrollInfo: state.setInfiniteScrollInfo,
-    Images: state.setImageInfo
+    Images: state.setImageInfo,
+    ImageLoadStatus: state.setImageLoadStatus
   };
 };
 const __ImageDisplayGrid = connect(mapStateToProps, {
   setThumbnailInfo,
   setImageInfo,
   setInfiniteScrollInfo,
-  setCurrentImageUrl
+  setCurrentImageUrl,
+  setImageLoadStatus
 })(_ImageDisplayGrid);
 
 export const ImageDisplayGrid = withRouter(__ImageDisplayGrid);
