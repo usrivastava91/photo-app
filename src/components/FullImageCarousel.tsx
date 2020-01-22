@@ -2,7 +2,8 @@ import React from "react";
 import { ImagesStore } from "../store/images/store";
 import { connect } from "react-redux";
 import { imagesLoaded } from "../utils/imagesLoaded";
-import { InfiniteScrollInfo, allPostType } from "../domain/InfiniteScrollInfo";
+import { InfiniteScrollInfo } from "../domain/InfiniteScrollInfo";
+import { withRouter } from "react-router-dom";
 import "./FullImageCarousel.css";
 import {
   setCurrentImageUrl,
@@ -19,7 +20,9 @@ interface actionProps {
   setCurrentImageUrl: typeof setCurrentImageUrl;
   setImageLoadStatus: typeof setImageLoadStatus;
 }
-interface FullImageCarouselProps extends stateProps, actionProps {}
+interface FullImageCarouselProps extends stateProps, actionProps {
+  history: any;
+}
 class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
   imageRef: React.RefObject<HTMLDivElement>;
 
@@ -87,10 +90,22 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
     image.style.opacity = "0";
   };
 
+  routeToDisplay = () => {
+    const { history } = this.props;
+    history.push({
+      pathname: "/"
+    });
+  };
+
   render() {
     const { currentImgUrl } = this.props;
     return (
       <div className="d-flex carousel justify-content-around container">
+        <i
+          className="fa fa-home fa-2x nav align-self-start"
+          aria-hidden="true"
+          onClick={this.routeToDisplay}
+        ></i>
         {this.renderSpinner()}
         <i
           className="fa fa-hand-o-left nav align-self-center fa-2x"
@@ -122,7 +137,9 @@ const mapStateToProps = (state: ImagesStore) => {
     InfiniteScrollInfo: state.InfiniteScrollInfo
   };
 };
-export const FullImageCarousel = connect(mapStateToProps, {
+const __FullImageCarousel = connect(mapStateToProps, {
   setCurrentImageUrl,
   setImageLoadStatus
 })(_FullImageCarousel);
+
+export const FullImageCarousel = withRouter(__FullImageCarousel);
