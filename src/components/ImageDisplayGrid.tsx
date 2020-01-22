@@ -226,10 +226,10 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
 }
 const mapStateToProps = (state: ImagesStore) => {
   return {
-    Thumbnails: state.setThumbnailInfo,
-    InfiniteScrollInfo: state.setInfiniteScrollInfo,
-    Images: state.setImageInfo,
-    ImageLoadStatus: state.setImageLoadStatus
+    Thumbnails: state.ThumbnailInfo,
+    InfiniteScrollInfo: state.InfiniteScrollInfo,
+    Images: state.ImageInfo,
+    ImageLoadStatus: state.ImageLoadStatus
   };
 };
 const __ImageDisplayGrid = connect(mapStateToProps, {

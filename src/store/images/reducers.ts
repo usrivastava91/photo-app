@@ -11,8 +11,6 @@ import ImageInfo from "../../domain/ImageInfo";
 import ThumbnailInfo from "../../domain/ThumbnailInfo";
 import { InfiniteScrollInfo } from "../../domain/InfiniteScrollInfo";
 import create_UUID from "../../utils/uuid";
-import { stat } from "fs";
-import { setUploadProgress, setCurrentImageUrl } from "./actions";
 const SET_IMAGE_INFO = "SET_IMAGE_INFO";
 const SET_THUMBNAIL_INFO = "SET_THUMBNAIL_INFO";
 const SET_INFINITE_SCROLL_INFO = "SET_INFINITE_SCROLL_INFO";
@@ -21,10 +19,7 @@ const SET_CURRENT_IMAGE_URL = "SET_CURRENT_IMAGE_URL";
 const SET_IMAGE_LOAD_STATUS = "SET_IMAGE_LOAD_STATUS";
 
 export const ImageReducer = {
-  setImageInfo(
-    state: ImageInfo[] = [],
-    action: setImageInfoTypes
-  ): ImageInfo[] {
+  ImageInfo(state: ImageInfo[] = [], action: setImageInfoTypes): ImageInfo[] {
     switch (action.type) {
       case SET_IMAGE_INFO: {
         const id = create_UUID();
@@ -42,6 +37,7 @@ export const ImageReducer = {
               timeStamp: action.payload.timeStamp
             }
           ].sort((a, b) => {
+            // Sorting the images by upload date ( newest first )
             if (b.timeStamp > a.timeStamp) {
               return 1;
             } else return -1;
@@ -51,7 +47,7 @@ export const ImageReducer = {
         return state;
     }
   },
-  setThumbnailInfo(
+  ThumbnailInfo(
     state: ThumbnailInfo[] = [],
     action: setThumbnailInfoTypes
   ): ThumbnailInfo[] {
@@ -82,7 +78,7 @@ export const ImageReducer = {
         return state;
     }
   },
-  setInfiniteScrollInfo(
+  InfiniteScrollInfo(
     state: InfiniteScrollInfo = {
       allposts: [],
       posts: [],
@@ -129,7 +125,7 @@ export const ImageReducer = {
         return state;
     }
   },
-  setUploadProgress(state: number = 0, action: setUploadProgressTypes) {
+  UploadProgress(state: number = 0, action: setUploadProgressTypes) {
     switch (action.type) {
       case SET_UPLOAD_PROGRESS: {
         return action.payload;
@@ -138,7 +134,7 @@ export const ImageReducer = {
         return state;
     }
   },
-  setCurrentImageUrl(state: string = "", action: setCurrentImageUrlTypes) {
+  CurrentImageUrl(state: string = "", action: setCurrentImageUrlTypes) {
     debugger;
     switch (action.type) {
       case SET_CURRENT_IMAGE_URL: {
@@ -148,7 +144,7 @@ export const ImageReducer = {
         return state;
     }
   },
-  setImageLoadStatus(state: boolean = true, action: setImageLoadStatusTypes) {
+  ImageLoadStatus(state: boolean = true, action: setImageLoadStatusTypes) {
     switch (action.type) {
       case SET_IMAGE_LOAD_STATUS: {
         return action.payload;

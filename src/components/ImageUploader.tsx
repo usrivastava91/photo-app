@@ -280,7 +280,7 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
 
 const mapStateToProps = (state: ImagesStore) => {
   return {
-    uploadProgress: state.setUploadProgress
+    uploadProgress: state.UploadProgress
   };
 };
 export const ImageUploader = connect(mapStateToProps, { setUploadProgress })(

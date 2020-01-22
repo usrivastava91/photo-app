@@ -119,10 +119,10 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
 }
 const mapStateToProps = (state: ImagesStore) => {
   return {
-    Images: state.setImageInfo,
-    currentImgUrl: state.setCurrentImageUrl,
-    ImageLoadStatus: state.setImageLoadStatus,
-    InfiniteScrollInfo: state.setInfiniteScrollInfo
+    Images: state.ImageInfo,
+    currentImgUrl: state.CurrentImageUrl,
+    ImageLoadStatus: state.ImageLoadStatus,
+    InfiniteScrollInfo: state.InfiniteScrollInfo
   };
 };
 export const FullImageCarousel = connect(mapStateToProps, {
