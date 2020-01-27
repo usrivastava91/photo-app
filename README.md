@@ -17,7 +17,7 @@ Since I am using firebase, I had to think around accomadating it in the design.
 
 I broke down the image upload process into three parts:
 
-##### Uploading the image
+#### Uploading the image
 
 When a user uploads an image(s), the actual image gets uploaded to firebase cloudstorage. Also, at the time of upload, I am creating an object with the respective image's information (id,url,name, and timestamp), and storing it to a firebase db. We need to do this step since the only way to fetch images from firebase storage is through URLs.
 
