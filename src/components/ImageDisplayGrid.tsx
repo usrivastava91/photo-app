@@ -229,6 +229,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                             src={thumbnail.url}
                             onLoad={this.handleImageLoadChange}
                             onError={this.handleImageLoadChange}
+                            alt={thumbnail.thumbnailName.replace("thumbnail_", "")}
                           ></img>
                         );
                       })}
