@@ -205,6 +205,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
                 const currentImgUrl = thumbnail.imgUrl;
                 return (
                   <img
+                    className="thumb-image"
                     data-imgurl={currentImgUrl}
                     data-index={index}
                     onClick={this.renderFullView}

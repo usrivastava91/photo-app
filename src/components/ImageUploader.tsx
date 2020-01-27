@@ -5,7 +5,7 @@ import { storage, fire } from "../fire";
 import { useHistory } from "react-router-dom";
 import create_UUID from "../utils/uuid";
 import { useDropzone } from "react-dropzone";
-import { ProgressBar, Button, ListGroup } from "react-bootstrap";
+import { ProgressBar, Button, ListGroup, Toast } from "react-bootstrap";
 import "./ImageUploader.css";
 import { setUploadProgress } from "../store/images/actions";
 
@@ -42,8 +42,10 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
       let tempImg = new Image();
       tempImg.src = reader.result as string;
       tempImg.onload = function() {
-        let MAX_WIDTH = getRandom(180, 240);
-        let MAX_HEIGHT = getRandom(180, 240);
+        // let MAX_WIDTH = getRandom(180, 240);
+        // let MAX_HEIGHT = getRandom(180, 240);
+        let MAX_WIDTH = 240;
+        let MAX_HEIGHT = 240;
         let tempW = tempImg.width;
         let tempH = tempImg.height;
         if (tempW > tempH) {
@@ -159,6 +161,11 @@ const _ImageUploader: React.FC<ImageUploaderProps> = (
 
   return (
     <div className="container mt-5">
+      {props.uploadProgress === 100 ? (
+        <Toast className="success-toast">
+          <Toast.Body>Image successfully uploaded</Toast.Body>
+        </Toast>
+      ) : null}
       <div {...getRootProps({ className: "dropzone" })}>
         <input {...getInputProps()} />
         <ListGroup>{listOfFilesUploaded}</ListGroup>

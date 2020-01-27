@@ -114,7 +114,7 @@ class _FullImageCarousel extends React.Component<FullImageCarouselProps> {
         ></i>
         <div className="image-container" ref={this.imageRef}>
           <img
-            className="image"
+            className="full-image"
             src={currentImgUrl}
             onLoad={this.handleImageLoadChange}
             onError={this.handleImageLoadChange}

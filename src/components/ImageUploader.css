@@ -17,3 +17,7 @@
 .image-grid-container {
   height: 80vh;
 }
+
+.success-toast {
+  margin: 0 auto;
+}
