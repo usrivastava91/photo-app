@@ -4,20 +4,15 @@
 }
 
 .thumb-image {
-  width: 100%;
+  max-width: 100%;
   height: auto;
   cursor: pointer;
+  margin: 5px;
 }
 
 .image-grid {
-  /* Prevent vertical gaps */
-  /* line-height: 0; */
-  -webkit-column-count: 5;
-  -webkit-column-gap: 0px;
-  -moz-column-count: 5;
-  -moz-column-gap: 0px;
-  column-count: 5;
-  column-gap: 0px;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 html ::-webkit-scrollbar {

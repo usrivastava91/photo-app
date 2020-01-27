@@ -6,6 +6,7 @@ import {
   setCurrentImageUrl,
   setImageLoadStatus
 } from "../store/images/actions";
+import { Badge } from "react-bootstrap";
 import { connect } from "react-redux";
 import { ImagesStore } from "../store/images/store";
 import ImageInfo from "../domain/ImageInfo";
@@ -17,6 +18,8 @@ import InfiniteScroll from "react-infinite-scroller";
 import { withRouter } from "react-router-dom";
 import { imagesLoaded } from "../utils/imagesLoaded";
 import "./ImageDisplayGrid.css";
+import groupBy from "lodash.groupby";
+import moment from "moment";
 
 interface storeProps {
   Images: ImageInfo[];
@@ -66,7 +69,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
       Images
     } = this.props;
 
-    let allPosts = Thumbnails.map(({ url, thumbnailName }) => {
+    let allPosts = Thumbnails.map(({ url, thumbnailName, timeStamp }) => {
       const currentImgName = thumbnailName.replace("thumbnail_", "");
       const currentImage = Images.filter(image => {
         return currentImgName === image.imageName;
@@ -74,7 +77,7 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
 
       const imgUrl = currentImage[0].url;
 
-      return { url, thumbnailName, imgUrl };
+      return { url, thumbnailName, imgUrl, timeStamp };
     });
     let curpage = this.InfiniteScrollInfo.curpage;
 
@@ -188,6 +191,9 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
   };
   render() {
     const { InfiniteScrollInfo } = this.props;
+    let groupedbyDateThumbs = groupBy(InfiniteScrollInfo.allposts, post => {
+      return moment(post.timeStamp).startOf("day");
+    });
     return (
       <div className="d-flex justify-content-center image-grid-container">
         {this.renderSpinner()}
@@ -200,21 +206,34 @@ class _ImageDisplayGrid extends React.Component<ImageDisplayGridProps> {
             useWindow={false}
             threshold={550}
           >
-            <div className="image-grid" ref={this.imageGridRef}>
-              {InfiniteScrollInfo.allposts.map((thumbnail, index) => {
-                const currentImgUrl = thumbnail.imgUrl;
+            <div>
+              {Object.keys(groupedbyDateThumbs).map(key => {
+                const thumbnails = groupedbyDateThumbs[key];
                 return (
-                  <img
-                    className="thumb-image"
-                    data-imgurl={currentImgUrl}
-                    data-index={index}
-                    onClick={this.renderFullView}
-                    key={index}
-                    src={thumbnail.url}
-                    onLoad={this.handleImageLoadChange}
-                    onError={this.handleImageLoadChange}
-                    alt=""
-                  />
+                  <div>
+                    <h3 className="m-1">
+                      <Badge variant="secondary">
+                        {key.substring(0, key.length - 18)}
+                      </Badge>
+                    </h3>
+                    <div className="image-grid" ref={this.imageGridRef}>
+                      {thumbnails.map((thumbnail, index) => {
+                        let currentImgUrl = thumbnail.imgUrl;
+                        return (
+                          <img
+                            className="thumb-image"
+                            data-imgurl={currentImgUrl}
+                            data-index={index}
+                            onClick={this.renderFullView}
+                            key={index}
+                            src={thumbnail.url}
+                            onLoad={this.handleImageLoadChange}
+                            onError={this.handleImageLoadChange}
+                          ></img>
+                        );
+                      })}
+                    </div>
+                  </div>
                 );
               })}
             </div>

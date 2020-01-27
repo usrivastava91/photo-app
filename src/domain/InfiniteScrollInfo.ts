@@ -2,6 +2,7 @@ export interface allPostType {
   url: string;
   thumbnailName: string;
   imgUrl: string;
+  timeStamp: number;
 }
 export interface InfiniteScrollInfo {
   allposts: allPostType[];
